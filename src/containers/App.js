@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
@@ -138,6 +137,8 @@ class App extends Component {
 
     checkboxItemHandler = (id, completed) => {
         const items = this.state.items;
+
+        this.state.items.co
 
         for(let i = 0; i < items.length; i++) {
             if(items[i].id === id) {
