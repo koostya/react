@@ -186,7 +186,7 @@ li {
 .menu .menu_inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: left;
     height: 40px;
 }
 
@@ -213,6 +213,7 @@ li {
 
 .tabs {
     position: relative;
+    padding-left: 115px;
 }
 
 .tabs .tab {
@@ -238,6 +239,7 @@ li {
     color: #777;
     font-size: 12px;
     padding-right: 10px;
+    padding-left: 66px;
 }
 
 #clear_completed:focus {
