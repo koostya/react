@@ -7,46 +7,26 @@ class Menu extends Component {
         this.state = props;
     }
 
-    componentDidMount(prevProps, prevState) {
-        if(prevProps !== this.props) {
-            this.showMenu();
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps !== this.props) {
-            this.showMenu();
-        }
-    }
-
-    showMenu() {
-        if(this.props.items.length > 0) {
-            this.setState({
-                showMenu: true
-            });
-        } else {
-            this.setState({
-                showMenu: false
-            });
-        }
-    }
-
     render() {
         return(
             <div id="menu" className="menu">
                 <div>
-                    <div className="menu_inner" style={{ display: this.state.showMenu ? 'flex' : 'none'}}>
+                    <div className="menu_inner">
                         <div className="items_left">
                             <span>{this.props.itemsLeft}</span> items left
                         </div>
                         <div className="tabs">
-                            <div className="tab" id="all">All</div>
-                            <div className="tab" id="active">Active</div>
-                            <div className="tab" id="completed">Completed</div>
+                            <div className={this.props.filter == 'all' ? 'tab active' : 'tab'} id="all" onClick={(e) => (this.props.changeFilter(e.target.id))}>All</div>
+                            <div className={this.props.filter == 'active' ? 'tab active' : 'tab'} id="active" onClick={(e) => (this.props.changeFilter(e.target.id))}>Active</div>
+                            <div className={this.props.filter == 'completed' ? 'tab active' : 'tab'} id="completed" onClick={(e) => (this.props.changeFilter(e.target.id))}>Completed</div>
                         </div>
-                        <button id="clear_completed">
-                            Clear completed
-                        </button>
+                        {this.props.items.length - this.props.checkHowManyItemsLeft() > 0 ?
+                            <button id="clear_completed" onClick={(e) => (this.props.removeManyItems(e))}>
+                                Clear completed
+                            </button>
+                            :
+                            ''
+                        }
                     </div>
                 </div>
             </div>

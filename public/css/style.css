@@ -184,7 +184,7 @@ li {
 }
 
 .menu .menu_inner {
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     height: 40px;
@@ -238,7 +238,6 @@ li {
     color: #777;
     font-size: 12px;
     padding-right: 10px;
-    visibility: hidden;
 }
 
 #clear_completed:focus {
@@ -261,7 +260,7 @@ li {
     height: 30px;
     top: 50%;
     transform: translateY(-50%);
-    visibility: hidden;
+    visibility: visible;
 }
 
 .choose_all.active {
@@ -296,14 +295,14 @@ li {
 
 .updateInput {
     position: absolute;
-    width: 100%;
+    width: 84.8%;
     height: 100%;
     background-color: #fff;
     border: none;
     padding: 0 16px 0 60px;
     color: #000;
     font-size: 20px;
-    display: none;
+    display: block;
 }
 
 .updateInput:focus {
