@@ -11,33 +11,17 @@ class App extends Component {
         let store = localStorage.getItem('store');
 
         this.state = JSON.parse(store);
-
-        this.createItem = this.createItem.bind(this);
-        this.generateID = this.generateID.bind(this);
-        this.mainInputHandler = this.mainInputHandler.bind(this);
-        this.checkboxItemHandler = this.checkboxItemHandler.bind(this);
-        this.checkHowManyItemsLeft = this.checkHowManyItemsLeft.bind(this);
-        this.chooseAllChange = this.chooseAllChange.bind(this);
-        this.chooseAllCheck = this.chooseAllCheck.bind(this);
-        this.removeItem = this.removeItem.bind(this);
-        this.editItemStart = this.editItemStart.bind(this);
-        this.editItemFinish = this.editItemFinish.bind(this);
-        this.removeManyItems = this.removeManyItems.bind(this);
-        this.updateState = this.updateState.bind(this);
-        this.changeFilter = this.changeFilter.bind(this);
-        this.filterItems = this.filterItems.bind(this);
     }
 
     componentDidMount(prevProps, prevState) {
         if(prevProps !== this.props) {
             this.setState({
-                chooseAllChecked: this.chooseAllCheck(),
-                itemsLeft: this.checkHowManyItemsLeft()
+                chooseAllChecked: this.chooseAllCheck()
             });
         }
     }
 
-    filterItems(value) {
+    filterItems = value => {
         let items = this.state.items,
             filteredItems = [];
 
@@ -54,11 +38,9 @@ class App extends Component {
         return filteredItems;
     }
 
-    updateState(items, text, itemsLeft, chooseAllChecked, filter) {
+    updateState = (items, chooseAllChecked, filter) => {
         let state = {
             items: items,
-            text: text,
-            itemsLeft: itemsLeft,
             chooseAllChecked: chooseAllChecked,
             filter: filter
         };
@@ -68,7 +50,7 @@ class App extends Component {
         window.localStorage.setItem('store', JSON.stringify(state));
     }
 
-    removeItem(id) {
+    removeItem = (id) => {
         let items = this.state.items;
 
         for(let i = 0; i < items.length; i++) {
@@ -77,10 +59,10 @@ class App extends Component {
             }
         }
 
-        this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), 'all');
+        this.updateState(items, this.chooseAllCheck(), 'all');
     }
 
-    removeManyItems() {
+    removeManyItems = () => {
         let items = this.state.items,
             newItems = [];
 
@@ -90,18 +72,18 @@ class App extends Component {
             }
         }
 
-        this.updateState(newItems, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), 'all');
+        this.updateState(newItems, this.chooseAllCheck(), 'all');
     }
 
-    changeFilter(value) {
+    changeFilter = (value) => {
         let items = this.state.items;
 
-        value === 'active' ? this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), 'active') :
-        value === 'completed' ? this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), 'completed') :
-        this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), 'all');
+        value === 'active' ? this.updateState(items, this.chooseAllCheck(), 'active') :
+        value === 'completed' ? this.updateState(items, this.chooseAllCheck(), 'completed') :
+        this.updateState(items, this.chooseAllCheck(), 'all');
     }
 
-    editItemStart(id) {
+    editItemStart = (id) => {
         let items = this.state.items;
 
         for(let i = 0; i < items.length; i++) {
@@ -110,10 +92,10 @@ class App extends Component {
             }
         }
 
-        this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), this.state.filter);
+        this.updateState(items, this.chooseAllCheck(), this.state.filter);
     }
 
-    editItemFinish(id, value) {
+    editItemFinish = (id, value) => {
         let items = this.state.items;
 
         for(let i = 0; i < items.length; i++) {
@@ -123,10 +105,10 @@ class App extends Component {
             }
         }
 
-        this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), this.state.filter);
+        this.updateState(items, this.chooseAllCheck(), this.state.filter);
     }
 
-    chooseAllCheck() {
+    chooseAllCheck = () => {
         let chooseAllChecked;
 
         if(this.checkHowManyItemsLeft() === 0  && this.state.items.length !== 0) {
@@ -138,38 +120,24 @@ class App extends Component {
         return chooseAllChecked;
     }
 
-    chooseAllChange(e) {
-        let chooseAllChecked;
+    chooseAllChange = (e) => {
+        this.chooseAllItems(e.target.checked);
 
-        if(e.target.checked === true) {
-            chooseAllChecked = true;
-
-            this.chooseAllItems(true);
-        } else {
-            chooseAllChecked = false;
-
-            this.chooseAllItems(false);
-        }
-
-        this.updateState(this.state.items, this.state.text, this.checkHowManyItemsLeft(), chooseAllChecked, this.state.filter);
+        this.updateState(this.state.items, e.target.checked, this.state.filter);
     }
 
-    chooseAllItems(choose) {
+    chooseAllItems = (choose) => {
         let items = this.state.items;
 
         for(let i = 0; i < items.length; i++) {
             items[i].completed = choose;
         }
 
-        this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), this.state.filter);
+        this.updateState(items, this.chooseAllCheck(), this.state.filter);
     }
 
-    mainInputHandler(e) {
-        this.updateState(this.state.items, e.target.value, this.checkHowManyItemsLeft(), this.chooseAllCheck(), this.state.filter);
-    }
-
-    checkboxItemHandler(id, completed) {
-        let items = this.state.items;
+    checkboxItemHandler = (id, completed) => {
+        const items = this.state.items;
 
         for(let i = 0; i < items.length; i++) {
             if(items[i].id === id) {
@@ -177,10 +145,10 @@ class App extends Component {
             }
         }
 
-        this.updateState(items, this.state.text, this.checkHowManyItemsLeft(), this.chooseAllCheck(), this.state.filter);
+        this.updateState(items, this.chooseAllCheck(), this.state.filter);
     }
 
-    checkHowManyItemsLeft() {
+    checkHowManyItemsLeft = () => {
         let countLeftItems = 0;
 
         for(let i = 0; i < this.state.items.length; i++) {
@@ -192,12 +160,11 @@ class App extends Component {
         return countLeftItems;
     }
 
-    createItem() {
+    createItem = (text) => {
         const newItem = {
-            id: this.generateID(),
+            id: + new Date(),
+            text: text,
             completed: false,
-            text: this.state.text,
-            checkboxID: this.generateID() + 1,
             editing: false
         };
 
@@ -205,23 +172,17 @@ class App extends Component {
 
         itemsArr.push(newItem);
 
-        this.updateState(itemsArr, '', this.checkHowManyItemsLeft(), false, this.state.filter);
-    }
-
-    generateID() {
-        return + new Date();
+        this.updateState(itemsArr, this.chooseAllCheck(), this.state.filter);
     }
 
     render() {
         return (
             <div className="mvc" id="mvc">
                 <Input
-                    items={this.state.items}
-                    text={this.state.text}
+                    itemsLength={this.state.items.length}
                     chooseAllChecked={this.state.chooseAllChecked}
 
                     createItem={this.createItem}
-                    mainInputHandler={this.mainInputHandler}
                     chooseAllChange={this.chooseAllChange}
                 />
                 <List
@@ -235,8 +196,8 @@ class App extends Component {
                 />
                 {this.state.items.length > 0 ?
                     <Menu
-                        items={this.state.items}
-                        itemsLeft={this.state.itemsLeft}
+                        itemsLength={this.state.items.length}
+                        itemsLeft={this.checkHowManyItemsLeft()}
                         filter={this.state.filter}
 
                         removeManyItems={this.removeManyItems}

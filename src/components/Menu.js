@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = props;
-    }
-
     render() {
         return(
             <div id="menu" className="menu">
@@ -16,11 +10,11 @@ class Menu extends Component {
                             <span>{this.props.itemsLeft}</span> items left
                         </div>
                         <div className="tabs">
-                            <div className={this.props.filter == 'all' ? 'tab active' : 'tab'} id="all" onClick={(e) => (this.props.changeFilter(e.target.id))}>All</div>
-                            <div className={this.props.filter == 'active' ? 'tab active' : 'tab'} id="active" onClick={(e) => (this.props.changeFilter(e.target.id))}>Active</div>
-                            <div className={this.props.filter == 'completed' ? 'tab active' : 'tab'} id="completed" onClick={(e) => (this.props.changeFilter(e.target.id))}>Completed</div>
+                            <div className={`tab ${this.props.filter === 'all' && 'active'}`} onClick={() => this.props.changeFilter('all')}>All</div>
+                            <div className={`tab ${this.props.filter === 'active' && 'active'}`} onClick={() => this.props.changeFilter('active')}>Active</div>
+                            <div className={`tab ${this.props.filter === 'completed' && 'active'}`} onClick={() => this.props.changeFilter('completed')}>Completed</div>
                         </div>
-                        {this.props.items.length - this.props.checkHowManyItemsLeft() > 0 ?
+                        {this.props.itemsLength - this.props.itemsLeft > 0 ?
                             <button id="clear_completed" onClick={(e) => (this.props.removeManyItems(e))}>
                                 Clear completed
                             </button>

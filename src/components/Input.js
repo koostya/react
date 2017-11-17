@@ -4,24 +4,24 @@ class Input extends Component {
     constructor(props) {
         super(props);
 
-        this.state = props;
-
-        this.handler = this.handler.bind(this);
-        this.inputEnter = this.inputEnter.bind(this);
-        this.chooseAllHandler = this.chooseAllHandler.bind(this);
+        this.state = {
+            text: ''
+        };
     }
 
-    handler(e) {
-        this.props.mainInputHandler(e);
+    handler = (e) => {
+        this.setState({
+            text: e.target.value
+        });
     }
 
-    chooseAllHandler(e) {
-        this.props.chooseAllChange(e);
-    }
-
-    inputEnter(e) {
+    inputEnter = (e) => {
         if(e.key === 'Enter') {
-            this.props.createItem();
+            this.props.createItem(e.target.value);
+
+            this.setState({
+                text: ''
+            });
         } else {
             this.setState({
                 text: e.target.value
@@ -32,10 +32,10 @@ class Input extends Component {
     render() {
         return(
             <div className="input_wrapper main_input_wrapper">
-                <input type="text" placeholder="What needs to be done?" id="main_input" onChange={(e) => (this.handler(e))} onKeyPress={(e) => (this.inputEnter(e))} value={this.props.text} />
-                {this.props.items.length > 0 ?
+                <input type="text" placeholder="What needs to be done?" id="main_input" onChange={(e) => (this.handler(e))} onKeyPress={(e) => (this.inputEnter(e))} value={this.state.text} />
+                {this.props.itemsLength > 0 ?
                     <div className="choose_all">
-                        <input type="checkbox" id="choose_all" onChange={(e) => this.chooseAllHandler(e)} checked={this.props.chooseAllChecked ? 'checked' : ''} />
+                        <input type="checkbox" id="choose_all" onChange={(e) => this.props.chooseAllChange(e)} checked={this.props.chooseAllChecked ? 'checked' : ''} />
                         <label htmlFor="choose_all"></label>
                     </div>
                     :

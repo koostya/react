@@ -3,22 +3,16 @@ import React, { Component } from 'react';
 import Item from './Item';
 
 class List extends Component {
-    constructor(props) {
-        super(props);
-        this.state = props;
-    }
-
     render() {
         return(
             <div id='list'>
                 <ul>
-                    {this.props.items.map(item => (
+                    {this.props.items.map((item, idx) => (
                         <Item
-                            key={item.id}
+                            key={idx}
                             id={item.id}
                             text={item.text}
                             completed={item.completed}
-                            checkboxID={item.checkboxID}
                             editing={item.editing}
 
                             checkboxItemHandler={this.props.checkboxItemHandler}
