@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Item from './Item';
 
@@ -14,7 +15,7 @@ class List extends Component {
                             text={item.text}
                             completed={item.completed}
                             editing={item.editing}
-                            store={this.props.store}
+                            dispatch={this.props.dispatch}
                         />
                     ))}
                 </ul>
@@ -23,4 +24,8 @@ class List extends Component {
     }
 }
 
-export default List;
+export default connect(
+    state => ({
+        
+    })
+)(List);

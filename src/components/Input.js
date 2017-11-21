@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { addItem, setAllChecked } from '../actions/actions';
 
@@ -19,9 +20,7 @@ class Input extends Component {
 
     inputEnter = (e) => {
         if(e.key === 'Enter') {
-            this.props.store.dispatch(addItem(this.generateID(), e.target.value, false, false));
-
-            console.log(this.props.store.getState());
+            this.props.dispatch(addItem(this.generateID(), e.target.value, false, false));
 
             this.setState({
                 text: ''
@@ -38,12 +37,22 @@ class Input extends Component {
     }
 
     render() {
+        const { items, dispatch } = this.props;
+        const { text } = this.state;
+        console.log(this.props);
         return(
             <div className="input_wrapper main_input_wrapper">
-                <input type="text" placeholder="What needs to be done?" id="main_input" onChange={(e) => (this.handler(e))} onKeyPress={(e) => (this.inputEnter(e))} value={this.state.text} />
-                {this.props.store.getState().store.items.length > 0 ?
+                <input 
+                    type="text" 
+                    placeholder="What needs to be done?" 
+                    id="main_input" 
+                    onChange={(e) => (this.handler(e))} 
+                    onKeyPress={(e) => (this.inputEnter(e))}
+                    value={text} 
+                />
+                {items.length > 0 ?
                     <div className="choose_all">
-                        <input type="checkbox" id="choose_all" onChange={(e) => {this.props.store.dispatch(setAllChecked(e.target.checked)); console.log(this.props.store.getState().store)}}  />
+                        <input type="checkbox" id="choose_all" onChange={(e) => dispatch(setAllChecked(e.target.checked))}  />
                         <label htmlFor="choose_all"></label>
                     </div>
                     :
@@ -55,4 +64,8 @@ class Input extends Component {
     }
 }
 
-export default Input;
+export default connect(
+    state => ({
+        items: state.store.items
+    })
+)(Input);

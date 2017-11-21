@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Input from '../components/Input';
 import List from '../components/List';
@@ -9,20 +10,17 @@ import { addItem, removeItem, setFilter, setAllChecked, changeCompleted, Filters
 class App extends Component {
     constructor(props) {
         super(props);
-
-        let store = localStorage.getItem('store');
-
-        this.state = this.props.data.getState().store;
     }
 
     componentDidMount(prevProps, prevState) {
         if(prevProps !== this.props) {
-            this.props.data.dispatch(setAllChecked(this.chooseAllCheck()));
+            this.props.dispatch(setAllChecked(this.chooseAllCheck()));
         }
     }
 
     filterItems = value => {
-        let items = this.props.data.getState().store.items,
+        console.log(this.props) 
+        let items = this.props.items,
             filteredItems = [];
 
         for(let i = 0; i < items.length; i++) {
@@ -35,16 +33,18 @@ class App extends Component {
             }
         }
 
+        console.log(filteredItems)
+
         return filteredItems;
     }
 
     removeManyItems = () => {
-        let items = this.props.data.getState().store.items,
+        let items = this.props.items,
             newItems = [];
 
         for(let i = 0; i < items.length; i++) {
             if(items[i].completed === true) {
-                this.props.data.dispatch(removeItem(items[i].id));
+                this.props.dispatch(removeItem(items[i].id));
             }
         }
     }
@@ -52,7 +52,7 @@ class App extends Component {
     chooseAllCheck = () => {
         let chooseAllChecked;
 
-        if(this.checkHowManyItemsLeft() === 0  && this.props.data.getState().store.items.length !== 0) {
+        if(this.checkHowManyItemsLeft() === 0  && this.props.items.length !== 0) {
             chooseAllChecked = true;
         } else {
             chooseAllChecked = false;
@@ -76,17 +76,14 @@ class App extends Component {
     }
 
     render() {
+        const { filter } = this.props;
         return (
             <div className="mvc" id="mvc">
-                <Input
-                    store={this.props.data}
-                />
+                <Input />
                 <List
-                    items={this.filterItems(this.props.data.getState().store.filter)}
-                    store={this.props.data}
-                    filter={this.props.data.getState().store.filter}
+                    items={this.filterItems(filter)}
                 />
-                {this.props.data.getState().store.items.length > 0 ?
+                {this.props.items.length > 0 ?
                     <Menu
                         store={this.props.data}
                         itemsLeft={this.checkHowManyItemsLeft()}
@@ -101,4 +98,9 @@ class App extends Component {
     }
 }
 
-export default App;
+export default connect(
+    state => ({
+        filter: state.store.filter,
+        items: state.store.items
+    })
+)(App);
