@@ -14,11 +14,7 @@ class List extends Component {
                             text={item.text}
                             completed={item.completed}
                             editing={item.editing}
-
-                            checkboxItemHandler={this.props.checkboxItemHandler}
-                            removeItem={this.props.removeItem}
-                            editItemStart={this.props.editItemStart}
-                            editItemFinish={this.props.editItemFinish}
+                            store={this.props.store}
                         />
                     ))}
                 </ul>

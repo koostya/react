@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { addItem, setAllChecked } from '../actions/actions';
+
 class Input extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +19,9 @@ class Input extends Component {
 
     inputEnter = (e) => {
         if(e.key === 'Enter') {
-            this.props.createItem(e.target.value);
+            this.props.store.dispatch(addItem(this.generateID(), e.target.value, false, false));
+
+            console.log(this.props.store.getState());
 
             this.setState({
                 text: ''
@@ -29,13 +33,17 @@ class Input extends Component {
         }
     }
 
+    generateID = () => {
+        return + new Date();
+    }
+
     render() {
         return(
             <div className="input_wrapper main_input_wrapper">
                 <input type="text" placeholder="What needs to be done?" id="main_input" onChange={(e) => (this.handler(e))} onKeyPress={(e) => (this.inputEnter(e))} value={this.state.text} />
-                {this.props.itemsLength > 0 ?
+                {this.props.store.getState().store.items.length > 0 ?
                     <div className="choose_all">
-                        <input type="checkbox" id="choose_all" onChange={(e) => this.props.chooseAllChange(e)} checked={this.props.chooseAllChecked ? 'checked' : ''} />
+                        <input type="checkbox" id="choose_all" onChange={(e) => {this.props.store.dispatch(setAllChecked(e.target.checked)); console.log(this.props.store.getState().store)}}  />
                         <label htmlFor="choose_all"></label>
                     </div>
                     :

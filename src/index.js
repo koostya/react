@@ -2,14 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './containers/App';
 
-const initialData = {
-    items: [],
-    text: '',
-    itemsLeft: 0,
-    chooseAllChecked: false
+import { createStore } from 'redux';
+import app from './reducers/main';
+
+import { addItem, removeItem, setFilter, setAllChecked, changeCompleted, Filters } from './actions/actions';
+
+const store = createStore(app);
+
+const render = () => {
+    ReactDOM.render(
+    <App data={store}/>,
+    document.getElementById('root')
+  )
 };
 
-ReactDOM.render(
-  <App data={initialData}/>,
-  document.getElementById('root')
-);
+store.subscribe(render);
+
+render();

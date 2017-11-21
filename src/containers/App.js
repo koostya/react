@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
+
+import { addItem, removeItem, setFilter, setAllChecked, changeCompleted, Filters } from '../actions/actions';
 
 class App extends Component {
     constructor(props) {
@@ -9,27 +12,25 @@ class App extends Component {
 
         let store = localStorage.getItem('store');
 
-        this.state = JSON.parse(store);
+        this.state = this.props.data.getState().store;
     }
 
     componentDidMount(prevProps, prevState) {
         if(prevProps !== this.props) {
-            this.setState({
-                chooseAllChecked: this.chooseAllCheck()
-            });
+            this.props.data.dispatch(setAllChecked(this.chooseAllCheck()));
         }
     }
 
     filterItems = value => {
-        let items = this.state.items,
+        let items = this.props.data.getState().store.items,
             filteredItems = [];
 
         for(let i = 0; i < items.length; i++) {
-            if(value === 'completed' && items[i].completed === true) {
+            if(value === 'COMPLETED' && items[i].completed === true) {
                 filteredItems.push(items[i]);
-            } else if(value === 'active' && items[i].completed === false) {
+            } else if(value === 'ACTIVE' && items[i].completed === false) {
                 filteredItems.push(items[i]);
-            } else if(value === 'all') {
+            } else if(value === 'ALL') {
                 filteredItems.push(items[i]);
             }
         }
@@ -37,80 +38,21 @@ class App extends Component {
         return filteredItems;
     }
 
-    updateState = (items, chooseAllChecked, filter) => {
-        let state = {
-            items: items,
-            chooseAllChecked: chooseAllChecked,
-            filter: filter
-        };
-
-        this.setState(state);
-
-        window.localStorage.setItem('store', JSON.stringify(state));
-    }
-
-    removeItem = (id) => {
-        let items = this.state.items;
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].id === id) {
-                items.splice(i, 1);
-            }
-        }
-
-        this.updateState(items, this.chooseAllCheck(), 'all');
-    }
-
     removeManyItems = () => {
-        let items = this.state.items,
+        let items = this.props.data.getState().store.items,
             newItems = [];
 
         for(let i = 0; i < items.length; i++) {
-            if(items[i].completed !== true) {
-                newItems.push(items[i]);
+            if(items[i].completed === true) {
+                this.props.data.dispatch(removeItem(items[i].id));
             }
         }
-
-        this.updateState(newItems, this.chooseAllCheck(), 'all');
-    }
-
-    changeFilter = (value) => {
-        let items = this.state.items;
-
-        value === 'active' ? this.updateState(items, this.chooseAllCheck(), 'active') :
-        value === 'completed' ? this.updateState(items, this.chooseAllCheck(), 'completed') :
-        this.updateState(items, this.chooseAllCheck(), 'all');
-    }
-
-    editItemStart = (id) => {
-        let items = this.state.items;
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].id === id) {
-                items[i].editing = true;
-            }
-        }
-
-        this.updateState(items, this.chooseAllCheck(), this.state.filter);
-    }
-
-    editItemFinish = (id, value) => {
-        let items = this.state.items;
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].id === id) {
-                items[i].text = value;
-                items[i].editing = false;
-            }
-        }
-
-        this.updateState(items, this.chooseAllCheck(), this.state.filter);
     }
 
     chooseAllCheck = () => {
         let chooseAllChecked;
 
-        if(this.checkHowManyItemsLeft() === 0  && this.state.items.length !== 0) {
+        if(this.checkHowManyItemsLeft() === 0  && this.props.data.getState().store.items.length !== 0) {
             chooseAllChecked = true;
         } else {
             chooseAllChecked = false;
@@ -119,41 +61,13 @@ class App extends Component {
         return chooseAllChecked;
     }
 
-    chooseAllChange = (e) => {
-        this.chooseAllItems(e.target.checked);
-
-        this.updateState(this.state.items, e.target.checked, this.state.filter);
-    }
-
-    chooseAllItems = (choose) => {
-        let items = this.state.items;
-
-        for(let i = 0; i < items.length; i++) {
-            items[i].completed = choose;
-        }
-
-        this.updateState(items, this.chooseAllCheck(), this.state.filter);
-    }
-
-    checkboxItemHandler = (id, completed) => {
-        const items = this.state.items;
-
-        this.state.items.co
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].id === id) {
-                items[i].completed = completed;
-            }
-        }
-
-        this.updateState(items, this.chooseAllCheck(), this.state.filter);
-    }
-
     checkHowManyItemsLeft = () => {
         let countLeftItems = 0;
 
-        for(let i = 0; i < this.state.items.length; i++) {
-            if(this.state.items[i].completed ===  false) {
+        console.log(this.props.data.getState().store);
+
+        for(let i = 0; i < this.props.data.getState().store.items.length; i++) {
+            if(this.props.data.getState().store.items[i].completed === false) {
                 countLeftItems++;
             }
         }
@@ -161,49 +75,23 @@ class App extends Component {
         return countLeftItems;
     }
 
-    createItem = (text) => {
-        const newItem = {
-            id: + new Date(),
-            text: text,
-            completed: false,
-            editing: false
-        };
-
-        let itemsArr = this.state.items;
-
-        itemsArr.push(newItem);
-
-        this.updateState(itemsArr, this.chooseAllCheck(), this.state.filter);
-    }
-
     render() {
         return (
             <div className="mvc" id="mvc">
                 <Input
-                    itemsLength={this.state.items.length}
-                    chooseAllChecked={this.state.chooseAllChecked}
-
-                    createItem={this.createItem}
-                    chooseAllChange={this.chooseAllChange}
+                    store={this.props.data}
                 />
                 <List
-                    items={this.filterItems(this.state.filter)}
-                    filter={this.state.filter}
-
-                    checkboxItemHandler={this.checkboxItemHandler}
-                    removeItem={this.removeItem}
-                    editItemStart={this.editItemStart}
-                    editItemFinish={this.editItemFinish}
+                    items={this.filterItems(this.props.data.getState().store.filter)}
+                    store={this.props.data}
+                    filter={this.props.data.getState().store.filter}
                 />
-                {this.state.items.length > 0 ?
+                {this.props.data.getState().store.items.length > 0 ?
                     <Menu
-                        itemsLength={this.state.items.length}
+                        store={this.props.data}
                         itemsLeft={this.checkHowManyItemsLeft()}
-                        filter={this.state.filter}
 
                         removeManyItems={this.removeManyItems}
-                        checkHowManyItemsLeft={this.checkHowManyItemsLeft}
-                        changeFilter={this.changeFilter}
                     />
                     :
                     ''

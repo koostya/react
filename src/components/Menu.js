@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { setFilter } from '../actions/actions';
+
 class Menu extends Component {
     render() {
         return(
@@ -10,11 +12,11 @@ class Menu extends Component {
                             <span>{this.props.itemsLeft}</span> items left
                         </div>
                         <div className="tabs">
-                            <div className={`tab ${this.props.filter === 'all' && 'active'}`} onClick={() => this.props.changeFilter('all')}>All</div>
-                            <div className={`tab ${this.props.filter === 'active' && 'active'}`} onClick={() => this.props.changeFilter('active')}>Active</div>
-                            <div className={`tab ${this.props.filter === 'completed' && 'active'}`} onClick={() => this.props.changeFilter('completed')}>Completed</div>
+                            <div className={`tab ${this.props.store.getState().store.filter === 'ALL' && 'active'}`} onClick={() => {this.props.store.dispatch(setFilter('ALL'))}}>All</div>
+                            <div className={`tab ${this.props.store.getState().store.filter === 'ACTIVE' && 'active'}`} onClick={() => {this.props.store.dispatch(setFilter('ACTIVE'))}}>Active</div>
+                            <div className={`tab ${this.props.store.getState().store.filter === 'COMPLETED' && 'active'}`} onClick={() => {this.props.store.dispatch(setFilter('COMPLETED'))}}>Completed</div>
                         </div>
-                        {this.props.itemsLength - this.props.itemsLeft > 0 ?
+                        {this.props.store.getState().store.items.length - this.props.itemsLeft > 0 ?
                             <button id="clear_completed" onClick={(e) => (this.props.removeManyItems(e))}>
                                 Clear completed
                             </button>
