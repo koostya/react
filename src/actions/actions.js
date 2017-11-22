@@ -44,10 +44,11 @@ export function removeItem(id) {
     }
 }
 
-export function changeCompleted(id) {
+export function changeCompleted(id, check) {
     return {
         type: CHANGE_COMPLETED,
-        id
+        id,
+        check
     }
 }
 

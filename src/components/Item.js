@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { removeItem, changeCompleted, changeEditing, updateItem } from '../actions/actions';
+import { removeItem, changeCompleted, changeEditing, updateItem, setAllChecked } from '../actions/actions';
 
 class Item extends Component {
     constructor(props) {
@@ -11,10 +12,14 @@ class Item extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.props.chooseAllCheck(nextProps.store.getState().store)
+    }
+
     editInput = (e) => {
         if(e.key === 'Enter' || e.key === 'Esc') {
-            this.props.dispatch(updateItem(this.props.id, this.state.text));
-            this.props.dispatch(changeEditing(this.props.id));
+            this.props.store.dispatch(updateItem(this.props.id, this.state.text));
+            this.props.store.dispatch(changeEditing(this.props.id));
         }
     }
 
@@ -22,23 +27,42 @@ class Item extends Component {
         this.setState({
             text: e.target.value
         });
-    }
+    }   
 
     render() {
         const { dispatch } = this.props;
+        const { text } = this.state;
         return(
             <li>
-                <div className={this.props.completed ? 'item completed' : 'item'} onDoubleClick={() => (this.props.dispatch(changeEditing(this.props.id)))}>
+                <div 
+                    className={this.props.completed ? 'item completed' : 'item'} 
+                    onDoubleClick={() => (dispatch(changeEditing(this.props.id)))}
+                >
                     <div className="checkbox">
-                        <input type="checkbox" id={this.props.id} onChange={() => {this.props.dispatch(changeCompleted(this.props.id))}} checked={this.completed ? 'checked' : ''} />
+                        <input 
+                            type="checkbox" 
+                            id={this.props.id}
+                            onChange={() => {dispatch(changeCompleted(this.props.id, false))}} 
+                            checked={this.props.completed ? 'checked' : ''} 
+                        />
                         <label htmlFor={this.props.id}></label>
                     </div>
                     <div className="text">
                         <span>{this.props.text}</span>
                     </div>
-                    <div className="remove" onClick={() => (this.props.dispatch(removeItem(this.props.id)))}></div>
+                    <div 
+                        className="remove" 
+                        onClick={() => (dispatch(removeItem(this.props.id)))}
+                    ></div>
                     {this.props.editing ?
-                        <input type="text" className="updateInput" onBlur={(e) => {this.props.dispatch(updateItem(this.props.id, e.target.value)); this.props.dispatch(changeEditing(this.props.id))}} onChange={(e) => (this.editInputHandler(e))} onKeyPress={this.editInput} value={this.state.text} />
+                        <input 
+                            type="text" 
+                            className="updateInput" 
+                            onBlur={(e) => {dispatch(updateItem(this.props.id, e.target.value)); dispatch(changeEditing(this.props.id))}} 
+                            onChange={(e) => (this.editInputHandler(e))} 
+                            onKeyPress={this.editInput} 
+                            value={text} 
+                        />
                         :
                         ''
                     }
@@ -48,4 +72,6 @@ class Item extends Component {
     }
 }
 
-export default Item;
+export default connect(
+    state => ({})
+)(Item);

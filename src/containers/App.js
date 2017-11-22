@@ -4,55 +4,43 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
+import Modal from '../components/Modal';
 
-import { addItem, removeItem, setFilter, setAllChecked, changeCompleted, Filters } from '../actions/actions';
+import { addItem, setAllChecked } from '../actions/actions';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount(prevProps, prevState) {
-        if(prevProps !== this.props) {
-            this.props.dispatch(setAllChecked(this.chooseAllCheck()));
-        }
-    }
 
     filterItems = value => {
-        console.log(this.props) 
         let items = this.props.items,
-            filteredItems = [];
+            loadCompleted;
+        
+        value === 'COMPLETED' ? loadCompleted = true : value === 'ACTIVE' ? loadCompleted = false : loadCompleted = 'all'
 
-        for(let i = 0; i < items.length; i++) {
-            if(value === 'COMPLETED' && items[i].completed === true) {
-                filteredItems.push(items[i]);
-            } else if(value === 'ACTIVE' && items[i].completed === false) {
-                filteredItems.push(items[i]);
-            } else if(value === 'ALL') {
-                filteredItems.push(items[i]);
+        return items.filter((item, i, arr) => {
+            if(item.completed === loadCompleted) {
+                return item
+            } else if(loadCompleted === 'all'){
+                return item
+            }
+        })
+    }
+
+    checkHowManyItemsLeft = (nextProps) => {
+        let countLeftItems = 0;
+
+        for(let i = 0; i < nextProps.items.length; i++) {
+            if(nextProps.items[i].completed === false) {
+                countLeftItems++;
             }
         }
 
-        console.log(filteredItems)
-
-        return filteredItems;
+        return countLeftItems;
     }
 
-    removeManyItems = () => {
-        let items = this.props.items,
-            newItems = [];
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].completed === true) {
-                this.props.dispatch(removeItem(items[i].id));
-            }
-        }
-    }
-
-    chooseAllCheck = () => {
+    chooseAllCheck = (nextProps) => {
         let chooseAllChecked;
 
-        if(this.checkHowManyItemsLeft() === 0  && this.props.items.length !== 0) {
+        if(this.checkHowManyItemsLeft(nextProps) === 0  && nextProps.items.length !== 0) {
             chooseAllChecked = true;
         } else {
             chooseAllChecked = false;
@@ -61,38 +49,28 @@ class App extends Component {
         return chooseAllChecked;
     }
 
-    checkHowManyItemsLeft = () => {
-        let countLeftItems = 0;
-
-        console.log(this.props.data.getState().store);
-
-        for(let i = 0; i < this.props.data.getState().store.items.length; i++) {
-            if(this.props.data.getState().store.items[i].completed === false) {
-                countLeftItems++;
-            }
-        }
-
-        return countLeftItems;
-    }
-
     render() {
-        const { filter } = this.props;
+        const { filter, items } = this.props;
         return (
             <div className="mvc" id="mvc">
-                <Input />
+                <Input 
+                    chooseAllCheck={this.chooseAllCheck}
+                />
                 <List
                     items={this.filterItems(filter)}
+                    store={this.props.data}
+                    chooseAllCheck={this.chooseAllCheck}
                 />
-                {this.props.items.length > 0 ?
-                    <Menu
-                        store={this.props.data}
-                        itemsLeft={this.checkHowManyItemsLeft()}
-
-                        removeManyItems={this.removeManyItems}
+                {items.length > 0 ?
+                    <Menu 
+                        itemsLeft={this.checkHowManyItemsLeft(this.props)}
                     />
                     :
                     ''
                 }
+                <Modal 
+
+                />
             </div>
         );
     }

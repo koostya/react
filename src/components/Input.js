@@ -12,6 +12,10 @@ class Input extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        // console.log(this.props)
+    }
+
     handler = (e) => {
         this.setState({
             text: e.target.value
@@ -32,14 +36,12 @@ class Input extends Component {
         }
     }
 
-    generateID = () => {
-        return + new Date();
-    }
+    generateID = () =>  new Date().getTime()
+
 
     render() {
-        const { items, dispatch } = this.props;
+        const { items, dispatch, chooseAllChecked } = this.props;
         const { text } = this.state;
-        console.log(this.props);
         return(
             <div className="input_wrapper main_input_wrapper">
                 <input 
@@ -52,13 +54,17 @@ class Input extends Component {
                 />
                 {items.length > 0 ?
                     <div className="choose_all">
-                        <input type="checkbox" id="choose_all" onChange={(e) => dispatch(setAllChecked(e.target.checked))}  />
+                        <input 
+                            type="checkbox" 
+                            id="choose_all" 
+                            onChange={(e) => {dispatch(setAllChecked(e.target.checked))}}
+                            checked={chooseAllChecked ? 'checked' : ''}
+                        />
                         <label htmlFor="choose_all"></label>
                     </div>
                     :
                     ''
                 }
-
             </div>
         );
     }
@@ -66,6 +72,7 @@ class Input extends Component {
 
 export default connect(
     state => ({
-        items: state.store.items
+        items: state.store.items,
+        chooseAllChecked: state.store.chooseAllChecked
     })
 )(Input);

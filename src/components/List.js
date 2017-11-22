@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 import Item from './Item';
 
@@ -8,14 +7,16 @@ class List extends Component {
         return(
             <div id='list'>
                 <ul>
-                    {this.props.items.map((item, idx) => (
+                    {this.props.items.map((item, idx, arr) => (
                         <Item
                             key={idx}
                             id={item.id}
                             text={item.text}
                             completed={item.completed}
                             editing={item.editing}
-                            dispatch={this.props.dispatch}
+                            store={this.props.store}
+                            chooseAllCheck={this.props.chooseAllCheck}
+                            items={arr}
                         />
                     ))}
                 </ul>
@@ -24,8 +25,4 @@ class List extends Component {
     }
 }
 
-export default connect(
-    state => ({
-        
-    })
-)(List);
+export default List;

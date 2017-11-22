@@ -5,13 +5,17 @@ import {
     SET_ALL_CHECKED,
     CHANGE_COMPLETED,
     CHANGE_EDITING,
-    UPDATE_ITEM,
-    Filters
+    UPDATE_ITEM
 } from '../actions/actions';
 
 const initialState = {
     filter: 'ALL',
-    items: [],
+    items: [{
+        text: 'ewf',
+        id: 234,
+        completed: false,
+        editing: false
+    }],
     chooseAllChecked: false
 };
 
@@ -67,7 +71,8 @@ function store(state = initialState, action) {
             })
         
         case CHANGE_COMPLETED:
-            return Object.assign({}, state, { 
+            return Object.assign({}, state, {
+                chooseAllChecked: state.check,
                 items: state.items.map((item) => {
                     if (item.id === action.id) {
                         return Object.assign({}, item, {

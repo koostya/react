@@ -314,3 +314,46 @@ li {
 .edit .updateInput {
     display: block;
 }
+
+.confirm-modal-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+}
+
+.confirm-modal-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.3);
+}
+
+.confirm-modal-inner {
+    width: 300px;
+    background-color: rgba(255,255,255,1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+.modal-but {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.modal-but.cancel-but {
+    float: right;
+}
+
+.modal-text {
+    padding-bottom: 20px;
+}
+
+
+
