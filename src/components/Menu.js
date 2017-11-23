@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setFilter, multipleDeliting } from '../actions/actions';
+import { setFilter, showModal } from '../actions/actions';
 
 import Modal from '../components/Modal';
 
 class Menu extends Component {
 
-    deleteManyItems = () => {
-        return this.props.items.filter((item) => (item.completed === true)).length >= 1 ? 
-        this.props.dispatch(multipleDeliting(true)) : 
-        this.props.dispatch(multipleDeliting(false))
-    }
-
     render() {
-        const { filter, items, dispatch, deleteManyItems } = this.props;
+        const { filter, items, dispatch, deleteManyItems = true } = this.props;
         return(
             <div id="menu" className="menu">
                 <div>
@@ -45,7 +39,7 @@ class Menu extends Component {
                         {items.length - this.props.itemsLeft > 0 ?
                             <button 
                                 id="clear_completed" 
-                                onClick={() => (this.deleteManyItems())}
+                                onClick={() => (dispatch(showModal(deleteManyItems, null)))}
                             >
                                 Clear completed
                             </button>
@@ -54,13 +48,6 @@ class Menu extends Component {
                         }
                     </div>
                 </div>
-                {deleteManyItems ?
-                    <Modal 
-                        deleteManyItems={deleteManyItems}
-                    />
-                    :
-                    ''
-                }
             </div>
         );
     }
@@ -69,7 +56,6 @@ class Menu extends Component {
 export default connect(
     state => ({
         items: state.store.items,
-        filter: state.store.filter,
-        deleteManyItems: state.store.deleteManyItems
+        filter: state.store.filter
     })
 )(Menu);

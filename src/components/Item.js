@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { removeItem, changeCompleted, changeEditing, updateItem, setAllChecked, showModal } from '../actions/actions';
+import { changeCompleted, changeEditing, updateItem, showModal } from '../actions/actions';
 
 import Modal from '../components/Modal';
 
@@ -32,8 +32,9 @@ class Item extends Component {
     }   
 
     render() {
-        const { dispatch } = this.props;
+        const { dispatch, deleteManyItems = false, id } = this.props;
         const { text } = this.state;
+        console.log(id)
         return(
             <li>
                 <div 
@@ -42,7 +43,7 @@ class Item extends Component {
                 >
                     <div className="checkbox">
                         <input 
-                            type="checkbox" 
+                            type="checkbox"
                             id={this.props.id}
                             onChange={() => {dispatch(changeCompleted(this.props.id, false))}} 
                             checked={this.props.completed ? 'checked' : ''} 
@@ -54,7 +55,7 @@ class Item extends Component {
                     </div>
                     <div 
                         className="remove" 
-                        onClick={() => (dispatch(showModal(this.props.id)))}
+                        onClick={() => (dispatch(showModal(deleteManyItems, id)))}
                     ></div>
                     {this.props.editing ?
                         <input 
@@ -69,14 +70,6 @@ class Item extends Component {
                         ''
                     }
                 </div>
-                {this.props.showModal ?
-                    <Modal 
-                        itemID={this.props.id}
-                        itemText={this.props.text}
-                    />
-                    :
-                    ''
-                }
             </li>
         );
     }

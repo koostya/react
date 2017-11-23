@@ -1,32 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { removeItem, showModal, multipleDeliting } from '../actions/actions';
+import { removeItem, showModal, multipleDeliting, confirmModal } from '../actions/actions';
 
 class Modal extends Component {
 
-    removeManyItems = () => {
-        let items = this.props.items;
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].completed === true) {
-                this.props.dispatch(removeItem(items[i].id, false));
-            }
-        }
-    }
-
     render() {
-        const { dispatch, items, itemsForeRemovingLength } = this.props
-        return(
+        const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems } = this.props
+        return isVisible ? (
             <div className='confirm-modal-wrap'>
                 <div 
                     className='confirm-modal-bg'
                 >
                     <div 
                         className='close-modal-bg'
-                        onClick={() => {this.props.deleteManyItems ? 
-                            dispatch(multipleDeliting(false)) : 
-                            dispatch(showModal(this.props.itemID))}}
+                        onClick={() => {dispatch(showModal())}}
                     >
                     </div>
                     <div className='confirm-modal-inner'>
@@ -40,30 +28,29 @@ class Modal extends Component {
                         </div>
                         <button 
                             className='confirm-but modal-but'
-                            onClick={() => {this.props.deleteManyItems ? 
-                                this.removeManyItems() : 
-                                dispatch(removeItem(this.props.itemID))}}
+                            onClick={() => {dispatch(confirmModal())}}
                         >
                             Yes
                         </button>
                         <button 
                             className='cancel-but modal-but'
-                            onClick={() => {this.props.deleteManyItems ? 
-                                dispatch(multipleDeliting(false)) : 
-                                dispatch(showModal(this.props.itemID))}}
+                            onClick={() => {dispatch(showModal())}}
                         >
                             No
                         </button>
                     </div>
                 </div>
             </div>
-        );
+        ) : null;
     }
 }
 
 export default connect(
     state => ({
         items: state.store.items,
-        itemsForeRemovingLength: state.store.items.filter((item) => (item.completed === true)).length
+        itemsForeRemovingLength: state.store.items.filter((item) => (item.completed === true)).length,
+        isVisible: state.store.modal,
+        deleteManyItems: state.store.deleteManyItems
     })
 )(Modal);
+``

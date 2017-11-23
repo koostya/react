@@ -7,6 +7,7 @@ export const CHANGE_EDITING = 'CHANGE_EDITING';
 export const UPDATE_ITEM = 'UPDATE_ITEM';
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const MULTIPLE_DELITING = 'MULTIPLE_DELITING';
+export const CONFIRM_MODAL = 'CONFIRM_MODAL';
 
 export const Filters = {
     ALL: 'ALL',
@@ -24,10 +25,17 @@ export function addItem(id, text, completed, editing) {
     }
 }
 
-export function showModal(id) {
+export function showModal(deleteManyItems, itemIdToBeDeleted) {
     return {
         type: SHOW_MODAL,
-        id
+        deleteManyItems,
+        itemIdToBeDeleted
+    }
+}
+
+export function confirmModal() {
+    return {
+        type: CONFIRM_MODAL
     }
 }
 

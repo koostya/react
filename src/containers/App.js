@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
-
-import { addItem, setAllChecked } from '../actions/actions';
+import DeleteModal from '../components/Modal';
 
 class App extends Component {
 
@@ -27,11 +26,11 @@ class App extends Component {
     checkHowManyItemsLeft = (nextProps) => {
         let countLeftItems = 0;
 
-        for(let i = 0; i < nextProps.items.length; i++) {
-            if(nextProps.items[i].completed === false) {
+        nextProps.items.map((item) => {
+            if(item.completed === false) {
                 countLeftItems++;
             }
-        }
+        })
 
         return countLeftItems;
     }
@@ -49,7 +48,7 @@ class App extends Component {
     }
 
     render() {
-        const { filter, items, showModal } = this.props;
+        const { filter, items, modal } = this.props;
         return (
             <div className="mvc" id="mvc">
                 <Input 
@@ -67,6 +66,9 @@ class App extends Component {
                     :
                     ''
                 }
+                {modal &&
+                    <DeleteModal />
+                }
             </div>
         );
     }
@@ -75,6 +77,7 @@ class App extends Component {
 export default connect(
     state => ({
         filter: state.store.filter,
-        items: state.store.items
+        items: state.store.items,
+        modal: state.store.modal
     })
 )(App);

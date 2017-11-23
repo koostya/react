@@ -7,7 +7,8 @@ import {
     CHANGE_EDITING,
     UPDATE_ITEM,
     SHOW_MODAL,
-    MULTIPLE_DELITING
+    MULTIPLE_DELITING,
+    CONFIRM_MODAL
 } from '../actions/actions';
 
 const initialState = {
@@ -16,11 +17,12 @@ const initialState = {
         text: 'ewf',
         id: 234,
         completed: false,
-        editing: false,
-        showModal: false
+        editing: false
     }],
     chooseAllChecked: false,
-    deleteManyItems: false
+    deleteManyItems: false,
+    modal: false,
+    itemIdToBeDeleted: 234
 };
 
 function store(state = initialState, action) {
@@ -102,14 +104,17 @@ function store(state = initialState, action) {
         
         case SHOW_MODAL:
             return Object.assign({}, state, {
-                items: state.items.map((item) => {
-                    if (item.id === action.id) {
-                        return Object.assign({}, item, {
-                            showModal: !item.showModal
-                        })
-                    }
-                    return item
-                })
+                modal: !state.modal,
+                deleteManyItems: action.deleteManyItems,
+                itemIdToBeDeleted: action.itemIdToBeDeleted
+            })
+
+        case CONFIRM_MODAL:
+            return Object.assign({}, state, {
+                items: state.itemIdToBeDeleted !== null ?
+                state.items.filter((item) => (item.id !== state.itemIdToBeDeleted)) :
+                state.items.filter((item) => (item.completed !== true)),
+                modal: false
             })
 
         case MULTIPLE_DELITING:
