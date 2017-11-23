@@ -6,7 +6,8 @@ import {
     CHANGE_COMPLETED,
     CHANGE_EDITING,
     UPDATE_ITEM,
-    SHOW_MODAL
+    SHOW_MODAL,
+    MULTIPLE_DELITING
 } from '../actions/actions';
 
 const initialState = {
@@ -18,7 +19,8 @@ const initialState = {
         editing: false,
         showModal: false
     }],
-    chooseAllChecked: false
+    chooseAllChecked: false,
+    deleteManyItems: false
 };
 
 function store(state = initialState, action) {
@@ -57,7 +59,8 @@ function store(state = initialState, action) {
 
         case REMOVE_ITEM:
             return Object.assign({}, state, { 
-                items: state.items.filter((item, i, arr) => (item.id !== action.id))
+                items: state.items.filter((item, i, arr) => (item.id !== action.id)),
+                deleteManyItems: action.deleteManyItems
             })
 
         case UPDATE_ITEM:
@@ -107,6 +110,11 @@ function store(state = initialState, action) {
                     }
                     return item
                 })
+            })
+
+        case MULTIPLE_DELITING:
+            return Object.assign({}, state, {
+                deleteManyItems: action.deleteManyItems
             })
 
         default:

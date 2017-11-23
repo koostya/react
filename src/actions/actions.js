@@ -6,6 +6,7 @@ export const CHANGE_COMPLETED = 'CHANGE_COMPLETED';
 export const CHANGE_EDITING = 'CHANGE_EDITING';
 export const UPDATE_ITEM = 'UPDATE_ITEM';
 export const SHOW_MODAL = 'SHOW_MODAL';
+export const MULTIPLE_DELITING = 'MULTIPLE_DELITING';
 
 export const Filters = {
     ALL: 'ALL',
@@ -30,6 +31,13 @@ export function showModal(id) {
     }
 }
 
+export function multipleDeliting(deleteManyItems) {
+    return {
+        type: MULTIPLE_DELITING,
+        deleteManyItems
+    }
+}
+
 export function changeEditing(id) {
     return {
         type: CHANGE_EDITING,
@@ -45,10 +53,11 @@ export function updateItem(id, text) {
     }
 }
 
-export function removeItem(id) {
+export function removeItem(id, deleteManyItems) {
     return {
         type: REMOVE_ITEM,
-        id
+        id,
+        deleteManyItems
     }
 }
 

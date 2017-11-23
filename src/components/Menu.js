@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setFilter, removeItem } from '../actions/actions';
+import { setFilter, multipleDeliting } from '../actions/actions';
+
+import Modal from '../components/Modal';
 
 class Menu extends Component {
 
-    removeManyItems = () => {
-        let items = this.props.items;
-
-        for(let i = 0; i < items.length; i++) {
-            if(items[i].completed === true) {
-                this.props.dispatch(removeItem(items[i].id));
-            }
-        }
+    deleteManyItems = () => {
+        return this.props.items.filter((item) => (item.completed === true)).length >= 1 ? 
+        this.props.dispatch(multipleDeliting(true)) : 
+        this.props.dispatch(multipleDeliting(false))
     }
 
     render() {
-        const { filter, items, dispatch } = this.props;
+        const { filter, items, dispatch, deleteManyItems } = this.props;
         return(
             <div id="menu" className="menu">
                 <div>
@@ -47,7 +45,7 @@ class Menu extends Component {
                         {items.length - this.props.itemsLeft > 0 ?
                             <button 
                                 id="clear_completed" 
-                                onClick={() => (this.removeManyItems())}
+                                onClick={() => (this.deleteManyItems())}
                             >
                                 Clear completed
                             </button>
@@ -56,6 +54,13 @@ class Menu extends Component {
                         }
                     </div>
                 </div>
+                {deleteManyItems ?
+                    <Modal 
+                        deleteManyItems={deleteManyItems}
+                    />
+                    :
+                    ''
+                }
             </div>
         );
     }
@@ -64,6 +69,7 @@ class Menu extends Component {
 export default connect(
     state => ({
         items: state.store.items,
-        filter: state.store.filter
+        filter: state.store.filter,
+        deleteManyItems: state.store.deleteManyItems
     })
 )(Menu);
