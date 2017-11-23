@@ -5,7 +5,8 @@ import {
     SET_ALL_CHECKED,
     CHANGE_COMPLETED,
     CHANGE_EDITING,
-    UPDATE_ITEM
+    UPDATE_ITEM,
+    SHOW_MODAL
 } from '../actions/actions';
 
 const initialState = {
@@ -14,7 +15,8 @@ const initialState = {
         text: 'ewf',
         id: 234,
         completed: false,
-        editing: false
+        editing: false,
+        showModal: false
     }],
     chooseAllChecked: false
 };
@@ -72,7 +74,7 @@ function store(state = initialState, action) {
         
         case CHANGE_COMPLETED:
             return Object.assign({}, state, {
-                chooseAllChecked: state.check,
+                chooseAllChecked: action.check,
                 items: state.items.map((item) => {
                     if (item.id === action.id) {
                         return Object.assign({}, item, {
@@ -89,6 +91,18 @@ function store(state = initialState, action) {
                     if (item.id === action.id) {
                         return Object.assign({}, item, {
                             editing: !item.editing
+                        })
+                    }
+                    return item
+                })
+            })
+        
+        case SHOW_MODAL:
+            return Object.assign({}, state, {
+                items: state.items.map((item) => {
+                    if (item.id === action.id) {
+                        return Object.assign({}, item, {
+                            showModal: !item.showModal
                         })
                     }
                     return item

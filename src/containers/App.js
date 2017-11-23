@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
-import Modal from '../components/Modal';
 
 import { addItem, setAllChecked } from '../actions/actions';
 
@@ -50,7 +49,7 @@ class App extends Component {
     }
 
     render() {
-        const { filter, items } = this.props;
+        const { filter, items, showModal } = this.props;
         return (
             <div className="mvc" id="mvc">
                 <Input 
@@ -68,9 +67,6 @@ class App extends Component {
                     :
                     ''
                 }
-                <Modal 
-
-                />
             </div>
         );
     }

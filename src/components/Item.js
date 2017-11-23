@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { removeItem, changeCompleted, changeEditing, updateItem, setAllChecked } from '../actions/actions';
+import { removeItem, changeCompleted, changeEditing, updateItem, setAllChecked, showModal } from '../actions/actions';
+
+import Modal from '../components/Modal';
 
 class Item extends Component {
     constructor(props) {
@@ -52,7 +54,7 @@ class Item extends Component {
                     </div>
                     <div 
                         className="remove" 
-                        onClick={() => (dispatch(removeItem(this.props.id)))}
+                        onClick={() => (dispatch(showModal(this.props.id)))}
                     ></div>
                     {this.props.editing ?
                         <input 
@@ -67,6 +69,14 @@ class Item extends Component {
                         ''
                     }
                 </div>
+                {this.props.showModal ?
+                    <Modal 
+                        itemID={this.props.id}
+                        itemText={this.props.text}
+                    />
+                    :
+                    ''
+                }
             </li>
         );
     }

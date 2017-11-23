@@ -5,6 +5,7 @@ export const SET_ALL_CHECKED = 'SET_ALL_CHECKED';
 export const CHANGE_COMPLETED = 'CHANGE_COMPLETED';
 export const CHANGE_EDITING = 'CHANGE_EDITING';
 export const UPDATE_ITEM = 'UPDATE_ITEM';
+export const SHOW_MODAL = 'SHOW_MODAL';
 
 export const Filters = {
     ALL: 'ALL',
@@ -19,6 +20,13 @@ export function addItem(id, text, completed, editing) {
         text,
         completed,
         editing
+    }
+}
+
+export function showModal(id) {
+    return {
+        type: SHOW_MODAL,
+        id
     }
 }
 
