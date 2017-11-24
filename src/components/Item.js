@@ -34,7 +34,6 @@ class Item extends Component {
     render() {
         const { dispatch, deleteManyItems = false, id } = this.props;
         const { text } = this.state;
-        console.log(id)
         return(
             <li>
                 <div 
