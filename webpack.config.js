@@ -23,7 +23,11 @@ var config = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
-    ]
+    ],
+    node: {
+        dns: 'mock',
+        net: 'mock'
+    }
 };
 
 module.exports = config;

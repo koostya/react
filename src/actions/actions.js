@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch'
+
 export const ADD_ITEM = 'ADD_ITEM';
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const SET_FILTER = 'SET_FILTER';
@@ -16,6 +18,16 @@ export const Filters = {
 };
 
 export function addItem(id, text, completed, editing) {
+    fetch('/a', {
+        method: 'POST',
+        header: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text: text
+        })
+    })
+
     return {
         type: ADD_ITEM,
         id,
