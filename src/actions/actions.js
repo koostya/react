@@ -10,6 +10,7 @@ export const UPDATE_ITEM = 'UPDATE_ITEM';
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const MULTIPLE_DELITING = 'MULTIPLE_DELITING';
 export const CONFIRM_MODAL = 'CONFIRM_MODAL';
+export const GET_ALL_ITEMS = 'GET_ALL_ITEMS';
 
 export const Filters = {
     ALL: 'ALL',
@@ -17,14 +18,32 @@ export const Filters = {
     COMPLETED: 'COMPLETED'
 };
 
+export function getAllItems() {
+    return (dispatch) => {
+        fetch('/items', {
+            method: 'GET'
+        }).then((res) => {
+            return res.json()
+        }).then((items) => {
+            dispatch({
+                type: GET_ALL_ITEMS,
+                items: items
+            })
+        })
+    }
+}
+
 export function addItem(id, text, completed, editing) {
-    fetch('/a', {
+    fetch('/items', {
         method: 'POST',
         header: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            text: text
+            id: id,
+            text: text,
+            completed: completed,
+            editing: editing
         })
     })
 
@@ -45,7 +64,15 @@ export function showModal(deleteManyItems, itemIdToBeDeleted) {
     }
 }
 
-export function confirmModal() {
+export function confirmModal(itemIdToBeDeleted, deleteManyItems) {
+    fetch('/items/${itemIdToBeDeleted}', {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: itemIdToBeDeleted,
+            deleteManyItems: deleteManyItems
+        })
+    })
+
     return {
         type: CONFIRM_MODAL
     }
@@ -65,7 +92,16 @@ export function changeEditing(id) {
     }
 }
 
-export function updateItem(id, text) {
+export function updateItem(id, completed, text) {
+    fetch('/items/${id}', {
+        method: 'PUT',
+        body: JSON.stringify({
+            id: id,
+            completed: completed,
+            text: text
+        })
+    })
+
     return {
         type: UPDATE_ITEM,
         id,
@@ -81,7 +117,16 @@ export function removeItem(id, deleteManyItems) {
     }
 }
 
-export function changeCompleted(id, check) {
+export function changeCompleted(id, check, text) {
+    fetch('/items/${id}', {
+        method: 'PUT',
+        body: JSON.stringify({
+            id: id,
+            completed: check,
+            text: text
+        })
+    })
+
     return {
         type: CHANGE_COMPLETED,
         id,
@@ -97,6 +142,13 @@ export function setFilter(filter) {
 }
 
 export function setAllChecked(allChecked) {
+    fetch('/items', {
+        method: 'PUT',
+        body: JSON.stringify({
+            allChecked: allChecked
+        })
+    })
+
     return {
         type: SET_ALL_CHECKED,
         allChecked

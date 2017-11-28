@@ -20,7 +20,7 @@ class Item extends Component {
 
     editInput = (e) => {
         if(e.key === 'Enter' || e.key === 'Esc') {
-            this.props.store.dispatch(updateItem(this.props.id, this.state.text));
+            this.props.store.dispatch(updateItem(this.props.id, this.props.completed, this.state.text));
             this.props.store.dispatch(changeEditing(this.props.id));
         }
     }
@@ -44,7 +44,7 @@ class Item extends Component {
                         <input 
                             type="checkbox"
                             id={this.props.id}
-                            onChange={() => {dispatch(changeCompleted(this.props.id, false))}} 
+                            onChange={(e) => {dispatch(changeCompleted(this.props.id, e.target.checked, this.props.text))}}
                             checked={this.props.completed ? 'checked' : ''} 
                         />
                         <label htmlFor={this.props.id}></label>
@@ -60,7 +60,7 @@ class Item extends Component {
                         <input 
                             type="text" 
                             className="updateInput" 
-                            onBlur={(e) => {dispatch(updateItem(this.props.id, e.target.value)); dispatch(changeEditing(this.props.id))}} 
+                            onBlur={(e) => {dispatch(updateItem(this.props.id, this.props.completed, e.target.value)); dispatch(changeEditing(this.props.id))}} 
                             onChange={(e) => (this.editInputHandler(e))} 
                             onKeyPress={this.editInput} 
                             value={text} 

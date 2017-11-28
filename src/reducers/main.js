@@ -8,17 +8,13 @@ import {
     UPDATE_ITEM,
     SHOW_MODAL,
     MULTIPLE_DELITING,
-    CONFIRM_MODAL
+    CONFIRM_MODAL,
+    GET_ALL_ITEMS
 } from '../actions/actions';
 
 const initialState = {
     filter: 'ALL',
-    items: [{
-        text: 'ewf',
-        id: 234,
-        completed: false,
-        editing: false
-    }],
+    items: [],
     chooseAllChecked: false,
     deleteManyItems: false,
     modal: false,
@@ -27,6 +23,11 @@ const initialState = {
 
 function store(state = initialState, action) {
     switch(action.type) {
+
+        case GET_ALL_ITEMS:
+            return Object.assign({}, state, {
+                items: action.items
+            })
 
         case SET_FILTER:
             return Object.assign({}, state, {

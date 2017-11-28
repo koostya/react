@@ -3,7 +3,9 @@ const Schema = mongoose.Schema
 
 const itemSchema = new Schema({
   id: String,
-  text: String
+  text: String,
+  completed: Boolean,
+  editing: Boolean
 })
 
 const Item = mongoose.model('Item', itemSchema)

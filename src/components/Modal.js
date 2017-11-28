@@ -6,7 +6,7 @@ import { removeItem, showModal, multipleDeliting, confirmModal } from '../action
 class Modal extends Component {
 
     render() {
-        const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems } = this.props
+        const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems, itemIdToBeDeleted } = this.props
         return isVisible ? (
             <div className='confirm-modal-wrap'>
                 <div 
@@ -28,7 +28,7 @@ class Modal extends Component {
                         </div>
                         <button 
                             className='confirm-but modal-but'
-                            onClick={() => {dispatch(confirmModal())}}
+                            onClick={() => {dispatch(confirmModal(itemIdToBeDeleted, deleteManyItems))}}
                         >
                             Yes
                         </button>
@@ -50,7 +50,8 @@ export default connect(
         items: state.store.items,
         itemsForeRemovingLength: state.store.items.filter((item) => (item.completed === true)).length,
         isVisible: state.store.modal,
-        deleteManyItems: state.store.deleteManyItems
+        deleteManyItems: state.store.deleteManyItems,
+        itemIdToBeDeleted: state.store.itemIdToBeDeleted
     })
 )(Modal);
 ``

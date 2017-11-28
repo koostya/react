@@ -6,6 +6,8 @@ import List from '../components/List';
 import Menu from '../components/Menu';
 import DeleteModal from '../components/Modal';
 
+import { getAllItems } from '../actions/actions';
+
 class App extends Component {
 
     filterItems = value => {
@@ -46,7 +48,7 @@ class App extends Component {
 
         return chooseAllChecked;
     }
-
+    
     render() {
         const { filter, items, modal } = this.props;
         return (

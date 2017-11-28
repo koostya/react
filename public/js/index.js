@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4c6a2d66112d56e617c7"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "40760a0030b7673cabeb"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -932,25 +932,6 @@ if (process.env.NODE_ENV === 'production') {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Provider__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_connectAdvanced__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__connect_connect__ = __webpack_require__(64);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Provider", function() { return __WEBPACK_IMPORTED_MODULE_0__components_Provider__["b"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createProvider", function() { return __WEBPACK_IMPORTED_MODULE_0__components_Provider__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "connectAdvanced", function() { return __WEBPACK_IMPORTED_MODULE_1__components_connectAdvanced__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "connect", function() { return __WEBPACK_IMPORTED_MODULE_2__connect_connect__["a"]; });
-
-
-
-
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -959,7 +940,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Filters = exports.CONFIRM_MODAL = exports.MULTIPLE_DELITING = exports.SHOW_MODAL = exports.UPDATE_ITEM = exports.CHANGE_EDITING = exports.CHANGE_COMPLETED = exports.SET_ALL_CHECKED = exports.SET_FILTER = exports.REMOVE_ITEM = exports.ADD_ITEM = undefined;
+exports.Filters = exports.GET_ALL_ITEMS = exports.CONFIRM_MODAL = exports.MULTIPLE_DELITING = exports.SHOW_MODAL = exports.UPDATE_ITEM = exports.CHANGE_EDITING = exports.CHANGE_COMPLETED = exports.SET_ALL_CHECKED = exports.SET_FILTER = exports.REMOVE_ITEM = exports.ADD_ITEM = undefined;
+exports.getAllItems = getAllItems;
 exports.addItem = addItem;
 exports.showModal = showModal;
 exports.confirmModal = confirmModal;
@@ -987,6 +969,7 @@ var UPDATE_ITEM = exports.UPDATE_ITEM = 'UPDATE_ITEM';
 var SHOW_MODAL = exports.SHOW_MODAL = 'SHOW_MODAL';
 var MULTIPLE_DELITING = exports.MULTIPLE_DELITING = 'MULTIPLE_DELITING';
 var CONFIRM_MODAL = exports.CONFIRM_MODAL = 'CONFIRM_MODAL';
+var GET_ALL_ITEMS = exports.GET_ALL_ITEMS = 'GET_ALL_ITEMS';
 
 var Filters = exports.Filters = {
     ALL: 'ALL',
@@ -994,14 +977,32 @@ var Filters = exports.Filters = {
     COMPLETED: 'COMPLETED'
 };
 
+function getAllItems() {
+    return function (dispatch) {
+        (0, _isomorphicFetch2.default)('/items', {
+            method: 'GET'
+        }).then(function (res) {
+            return res.json();
+        }).then(function (items) {
+            dispatch({
+                type: GET_ALL_ITEMS,
+                items: items
+            });
+        });
+    };
+}
+
 function addItem(id, text, completed, editing) {
-    (0, _isomorphicFetch2.default)('/a', {
+    (0, _isomorphicFetch2.default)('/items', {
         method: 'POST',
         header: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            text: text
+            id: id,
+            text: text,
+            completed: completed,
+            editing: editing
         })
     });
 
@@ -1022,7 +1023,15 @@ function showModal(deleteManyItems, itemIdToBeDeleted) {
     };
 }
 
-function confirmModal() {
+function confirmModal(itemIdToBeDeleted, deleteManyItems) {
+    (0, _isomorphicFetch2.default)('/items/${itemIdToBeDeleted}', {
+        method: 'DELETE',
+        body: JSON.stringify({
+            id: itemIdToBeDeleted,
+            deleteManyItems: deleteManyItems
+        })
+    });
+
     return {
         type: CONFIRM_MODAL
     };
@@ -1042,7 +1051,16 @@ function changeEditing(id) {
     };
 }
 
-function updateItem(id, text) {
+function updateItem(id, completed, text) {
+    (0, _isomorphicFetch2.default)('/items/${id}', {
+        method: 'PUT',
+        body: JSON.stringify({
+            id: id,
+            completed: completed,
+            text: text
+        })
+    });
+
     return {
         type: UPDATE_ITEM,
         id: id,
@@ -1058,7 +1076,16 @@ function removeItem(id, deleteManyItems) {
     };
 }
 
-function changeCompleted(id, check) {
+function changeCompleted(id, check, text) {
+    (0, _isomorphicFetch2.default)('/items/${id}', {
+        method: 'PUT',
+        body: JSON.stringify({
+            id: id,
+            completed: check,
+            text: text
+        })
+    });
+
     return {
         type: CHANGE_COMPLETED,
         id: id,
@@ -1074,11 +1101,37 @@ function setFilter(filter) {
 }
 
 function setAllChecked(allChecked) {
+    (0, _isomorphicFetch2.default)('/items', {
+        method: 'PUT',
+        body: JSON.stringify({
+            allChecked: allChecked
+        })
+    });
+
     return {
         type: SET_ALL_CHECKED,
         allChecked: allChecked
     };
 }
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Provider__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_connectAdvanced__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__connect_connect__ = __webpack_require__(64);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Provider", function() { return __WEBPACK_IMPORTED_MODULE_0__components_Provider__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createProvider", function() { return __WEBPACK_IMPORTED_MODULE_0__components_Provider__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "connectAdvanced", function() { return __WEBPACK_IMPORTED_MODULE_1__components_connectAdvanced__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "connect", function() { return __WEBPACK_IMPORTED_MODULE_2__connect_connect__["a"]; });
+
+
+
+
+
 
 /***/ }),
 /* 4 */
@@ -1394,9 +1447,9 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(2);
+var _reactRedux = __webpack_require__(3);
 
-var _actions = __webpack_require__(3);
+var _actions = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1422,7 +1475,8 @@ var Modal = function (_Component) {
                 dispatch = _props.dispatch,
                 itemsForeRemovingLength = _props.itemsForeRemovingLength,
                 isVisible = _props.isVisible,
-                deleteManyItems = _props.deleteManyItems;
+                deleteManyItems = _props.deleteManyItems,
+                itemIdToBeDeleted = _props.itemIdToBeDeleted;
 
             return isVisible ? _react2.default.createElement(
                 'div',
@@ -1457,7 +1511,7 @@ var Modal = function (_Component) {
                             {
                                 className: 'confirm-but modal-but',
                                 onClick: function onClick() {
-                                    dispatch((0, _actions.confirmModal)());
+                                    dispatch((0, _actions.confirmModal)(itemIdToBeDeleted, deleteManyItems));
                                 }
                             },
                             'Yes'
@@ -1488,7 +1542,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
             return item.completed === true;
         }).length,
         isVisible: state.store.modal,
-        deleteManyItems: state.store.deleteManyItems
+        deleteManyItems: state.store.deleteManyItems,
+        itemIdToBeDeleted: state.store.itemIdToBeDeleted
     };
 })(Modal);
 
@@ -3273,17 +3328,25 @@ var _App = __webpack_require__(55);
 
 var _App2 = _interopRequireDefault(_App);
 
+var _reduxThunk = __webpack_require__(101);
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
 var _redux = __webpack_require__(10);
 
-var _reactRedux = __webpack_require__(2);
+var _reactRedux = __webpack_require__(3);
 
-var _main = __webpack_require__(101);
+var _main = __webpack_require__(102);
 
 var _main2 = _interopRequireDefault(_main);
 
+var _actions = __webpack_require__(2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var store = (0, _redux.createStore)(_main2.default, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+var store = (0, _redux.createStore)(_main2.default, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), (0, _redux.applyMiddleware)(_reduxThunk2.default));
+
+store.dispatch((0, _actions.getAllItems)());
 
 var render = function render() {
   _reactDom2.default.render(_react2.default.createElement(
@@ -20766,7 +20829,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(2);
+var _reactRedux = __webpack_require__(3);
 
 var _Input = __webpack_require__(95);
 
@@ -20783,6 +20846,8 @@ var _Menu2 = _interopRequireDefault(_Menu);
 var _Modal = __webpack_require__(12);
 
 var _Modal2 = _interopRequireDefault(_Modal);
+
+var _actions = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23260,9 +23325,9 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(2);
+var _reactRedux = __webpack_require__(3);
 
-var _actions = __webpack_require__(3);
+var _actions = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23934,9 +23999,9 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(2);
+var _reactRedux = __webpack_require__(3);
 
-var _actions = __webpack_require__(3);
+var _actions = __webpack_require__(2);
 
 var _Modal = __webpack_require__(12);
 
@@ -23960,7 +24025,7 @@ var Item = function (_Component) {
 
         _this.editInput = function (e) {
             if (e.key === 'Enter' || e.key === 'Esc') {
-                _this.props.store.dispatch((0, _actions.updateItem)(_this.props.id, _this.state.text));
+                _this.props.store.dispatch((0, _actions.updateItem)(_this.props.id, _this.props.completed, _this.state.text));
                 _this.props.store.dispatch((0, _actions.changeEditing)(_this.props.id));
             }
         };
@@ -24011,8 +24076,8 @@ var Item = function (_Component) {
                         _react2.default.createElement('input', {
                             type: 'checkbox',
                             id: this.props.id,
-                            onChange: function onChange() {
-                                dispatch((0, _actions.changeCompleted)(_this2.props.id, false));
+                            onChange: function onChange(e) {
+                                dispatch((0, _actions.changeCompleted)(_this2.props.id, e.target.checked, _this2.props.text));
                             },
                             checked: this.props.completed ? 'checked' : ''
                         }),
@@ -24037,7 +24102,7 @@ var Item = function (_Component) {
                         type: 'text',
                         className: 'updateInput',
                         onBlur: function onBlur(e) {
-                            dispatch((0, _actions.updateItem)(_this2.props.id, e.target.value));dispatch((0, _actions.changeEditing)(_this2.props.id));
+                            dispatch((0, _actions.updateItem)(_this2.props.id, _this2.props.completed, e.target.value));dispatch((0, _actions.changeEditing)(_this2.props.id));
                         },
                         onChange: function onChange(e) {
                             return _this2.editInputHandler(e);
@@ -24074,9 +24139,9 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(2);
+var _reactRedux = __webpack_require__(3);
 
-var _actions = __webpack_require__(3);
+var _actions = __webpack_require__(2);
 
 var _Modal = __webpack_require__(12);
 
@@ -24195,11 +24260,40 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 "use strict";
 
 
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
+
+/***/ }),
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _actions = __webpack_require__(3);
+var _actions = __webpack_require__(2);
 
 var _redux = __webpack_require__(10);
 
@@ -24207,12 +24301,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var initialState = {
     filter: 'ALL',
-    items: [{
-        text: 'ewf',
-        id: 234,
-        completed: false,
-        editing: false
-    }],
+    items: [],
     chooseAllChecked: false,
     deleteManyItems: false,
     modal: false,
@@ -24224,6 +24313,11 @@ function store() {
     var action = arguments[1];
 
     switch (action.type) {
+
+        case _actions.GET_ALL_ITEMS:
+            return Object.assign({}, state, {
+                items: action.items
+            });
 
         case _actions.SET_FILTER:
             return Object.assign({}, state, {
