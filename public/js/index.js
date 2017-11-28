@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "40760a0030b7673cabeb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7c0d661a397eb4610ce0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -1502,7 +1502,7 @@ var Modal = function (_Component) {
                             _react2.default.createElement(
                                 'span',
                                 null,
-                                this.props.deleteManyItems ? ' ' + itemsForeRemovingLength + ' item' : ' "' + this.props.itemText + '" '
+                                this.props.deleteManyItems ? ' ' + itemsForeRemovingLength + ' item' : ' item '
                             ),
                             '?'
                         ),

@@ -22,7 +22,7 @@ class Modal extends Component {
                             Are you sure, that you want to remove 
                             <span>{this.props.deleteManyItems ? 
                                 ' ' + itemsForeRemovingLength + ' item' : 
-                                ' "' + this.props.itemText + '" '}
+                                ' item '}
                             </span>
                             ?
                         </div>
