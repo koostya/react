@@ -52,6 +52,8 @@ router.delete("/items/:id", async (ctx) => {
             console.log('Items were removed')
         })
     }
+
+    ctx.response.body = ctx.request.body
 })
 
 router.put("/items/:id", async (ctx) => {

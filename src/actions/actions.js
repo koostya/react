@@ -142,15 +142,38 @@ export function setFilter(filter) {
 }
 
 export function setAllChecked(allChecked) {
-    fetch('/items', {
-        method: 'PUT',
-        body: JSON.stringify({
-            allChecked: allChecked
-        })
-    })
+    send('/items', 'PUT', JSON.stringify({
+        allChecked: allChecked
+    }), SET_ALL_CHECKED)
+    
+    // fetch('/items', {
+    //     method: 'PUT',
+    //     body: JSON.stringify({
+    //         allChecked: allChecked
+    //     })
+    // })
 
-    return {
-        type: SET_ALL_CHECKED,
-        allChecked
+    // return {
+    //     type: SET_ALL_CHECKED,
+    //     allChecked
+    // }
+}
+
+function send(url, method, body, type) {
+    return (dispatch) => {
+        fetch(url, {
+            method: method,
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then((res) => {
+            return res.json()
+        }).then((json) => {
+            dispatch({
+                type: type,
+                body: json
+            })
+        })
     }
 }
