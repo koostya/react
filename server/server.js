@@ -11,22 +11,26 @@ const app = new Koa()
 const router = new Router()
 
 const Item = require('./models/Item')
+const User = require('./models/User')
 
 const connection = require("./connection")
 const db = connection.db
  
 app.use(require("koa-webpack-dev-middleware")(compiler))
 app.use(require("koa-webpack-hot-middleware")(compiler))
+
 app.use(BodyParser())
 app.use(serve('/home/gnom/workspace/react/mvcapp/public'))
 
-router.post("/items", (ctx) => {
+router.post("/item", async (ctx) => {
     let body = JSON.parse(ctx.request.body)
+
     let item = new Item({
         id: body.id,
         text: body.text,
         completed: body.completed,
-        editing: body.editing
+        editing: body.editing,
+        userID: body.userID
     })
 
     item.save()
@@ -74,6 +78,47 @@ router.put("/items", async (ctx) => {
     })
 
     ctx.body = ctx.request.body
+})
+
+router.post("/user", async (ctx) => {
+    let reqBody = JSON.parse(ctx.request.body)
+
+    await User.find({name: reqBody.name}, function(err, users) {
+        if(users.length == 0) {
+            let user = new User({
+                id: reqBody.id,
+                name: reqBody.name,
+                password: reqBody.password
+            })
+        
+            user.save()
+
+            reqBody.items = []
+            reqBody.logged = true
+
+            ctx.response.body = reqBody
+        } else {
+            reqBody.logged = true
+    
+            console.log(reqBody)
+    
+            ctx.response.body = reqBody
+        }
+    })
+})
+
+router.get("/user/items/${userID}", async (ctx) => {
+    // let reqBody = JSON.parse(ctx.request.body)
+    cosnole.log(ctx.request.query)
+
+    await Item.find({userID: reqBody.userID}, function(err, items) {
+        reqBody.items = items
+        reqBody.logged = true
+
+        console.log(reqBody)
+
+        ctx.response.body = reqBody
+    })
 })
 
 app.use(router.routes());

@@ -386,5 +386,42 @@ li {
     font-size: 18px;
 }
 
+.form_button {
+    width: 100%;
+    border-radius: 20px;
+    background-color: #BF3030;
+    padding: 7px 0;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.form_button:hover {
+    background-color: rgba(255, 64, 64, .8);
+}
+
+.name_input,
+.password_input {
+    width: 500px;
+    height: 40px;
+    text-align: left;
+    border: none;
+    font-size: 16px;
+    color: #FF7373;
+    margin-bottom: 10px;
+    border-radius: 7px;
+    box-shadow: 0 0 10px -3px rgba(255, 64, 64, .8);
+}
+
+.name_input:focus,
+.password_input:focus {
+    outline: none;
+}
+
+.mvc_wrap {
+    width: 500px;
+}
+
 
 

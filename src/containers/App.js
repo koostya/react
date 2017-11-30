@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
+import Form from '../components/Form';
 import DeleteModal from '../components/Modal';
 
-import { getAllItems } from '../actions/actions';
+import { getItemsForUser } from '../actions/actions';
 
 class App extends Component {
 
@@ -50,26 +51,37 @@ class App extends Component {
     }
     
     render() {
-        const { filter, items, modal } = this.props;
+        const { filter, items, modal, logged } = this.props;
         return (
-            <div className="mvc" id="mvc">
-                <Input 
-                    chooseAllCheck={this.chooseAllCheck}
-                />
-                <List
-                    items={this.filterItems(filter)}
-                    store={this.props.data}
-                    chooseAllCheck={this.chooseAllCheck}
-                />
-                {items.length > 0 ?
-                    <Menu 
-                        itemsLeft={this.checkHowManyItemsLeft(this.props)}
-                    />
+            <div className="mvc_wrap">
+            {logged ?
+                ''
+                :
+                <Form />
+            }
+                {logged ?
+                    <div className="mvc" id="mvc">
+                        <Input 
+                            chooseAllCheck={this.chooseAllCheck}
+                        />
+                        <List
+                            items={this.filterItems(filter)}
+                            store={this.props.data}
+                            chooseAllCheck={this.chooseAllCheck}
+                        />
+                        {items.length > 0 ?
+                            <Menu 
+                                itemsLeft={this.checkHowManyItemsLeft(this.props)}
+                            />
+                            :
+                            ''
+                        }
+                        {modal &&
+                            <DeleteModal />
+                        }
+                    </div>
                     :
                     ''
-                }
-                {modal &&
-                    <DeleteModal />
                 }
             </div>
         );
@@ -80,6 +92,7 @@ export default connect(
     state => ({
         filter: state.store.filter,
         items: state.store.items,
-        modal: state.store.modal
+        modal: state.store.modal,
+        logged: state.store.logged
     })
 )(App);

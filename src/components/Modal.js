@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { removeItem, showModal, multipleDeliting, confirmModal } from '../actions/actions';
+import { showModal, confirmModal } from '../actions/actions';
 
 class Modal extends Component {
 

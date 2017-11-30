@@ -12,10 +12,6 @@ class Input extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        // console.log(this.props)
-    }
-
     handler = (e) => {
         this.setState({
             text: e.target.value
@@ -24,7 +20,7 @@ class Input extends Component {
 
     inputEnter = (e) => {
         if(e.key === 'Enter') {
-            this.props.dispatch(addItem(this.generateID(), e.target.value, false, false));
+            this.props.dispatch(addItem(this.generateID(), e.target.value, false, false, this.props.user));
 
             this.setState({
                 text: ''
@@ -73,6 +69,7 @@ class Input extends Component {
 export default connect(
     state => ({
         items: state.store.items,
-        chooseAllChecked: state.store.chooseAllChecked
+        chooseAllChecked: state.store.chooseAllChecked,
+        user: state.store.user
     })
 )(Input);

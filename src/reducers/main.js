@@ -1,15 +1,15 @@
 import {
     ADD_ITEM,
-    REMOVE_ITEM,
     SET_FILTER,
     SET_ALL_CHECKED,
     CHANGE_COMPLETED,
     CHANGE_EDITING,
     UPDATE_ITEM,
     SHOW_MODAL,
-    MULTIPLE_DELITING,
     CONFIRM_MODAL,
-    GET_ALL_ITEMS
+    GET_ALL_ITEMS,
+    SUBMIT_FORM,
+    GET_ITEMS_FOR_USER
 } from '../actions/actions';
 
 const initialState = {
@@ -18,7 +18,9 @@ const initialState = {
     chooseAllChecked: false,
     deleteManyItems: false,
     modal: false,
-    itemIdToBeDeleted: 234
+    itemIdToBeDeleted: 234,
+    user: '',
+    logged: false
 };
 
 function store(state = initialState, action) {
@@ -26,7 +28,19 @@ function store(state = initialState, action) {
 
         case GET_ALL_ITEMS:
             return Object.assign({}, state, {
-                items: action.items
+                items: action.body
+            })
+        
+        case GET_ITEMS_FOR_USER:
+            return Object.assign({}, state, {
+                items: action.body.items
+            })
+
+        case SUBMIT_FORM:
+            return Object.assign({}, state, {
+                items: action.body.items,
+                logged: action.body.logged,
+                user: action.body.id
             })
 
         case SET_FILTER:
@@ -36,11 +50,11 @@ function store(state = initialState, action) {
 
         case SET_ALL_CHECKED:
             return Object.assign({}, state, {
-                chooseAllChecked: action.allChecked,
+                chooseAllChecked: action.body.allChecked,
                 items: state.items.map((item) => {
-                    if (item.completed !== action.allChecked) {
+                    if (item.completed !== action.body.allChecked) {
                         return Object.assign({}, item, {
-                            completed: action.allChecked
+                            completed: action.body.allChecked
                         })
                     }
                     return item
@@ -52,26 +66,20 @@ function store(state = initialState, action) {
                 items: [
                     ...state.items,
                     {
-                        text: action.text,
-                        completed: action.completed,
-                        id: action.id,
-                        editing: action.editing
+                        text: action.body.text,
+                        completed: action.body.completed,
+                        id: action.body.id,
+                        editing: action.body.editing
                     }
                 ]
-            })
-
-        case REMOVE_ITEM:
-            return Object.assign({}, state, { 
-                items: state.items.filter((item, i, arr) => (item.id !== action.id)),
-                deleteManyItems: action.deleteManyItems
             })
 
         case UPDATE_ITEM:
             return Object.assign({}, state, { 
                 items: state.items.map((item) => {
-                    if (item.id === action.id) {
+                    if (item.id === action.body.id) {
                         return Object.assign({}, item, {
-                            text: action.text
+                            text: action.body.text
                         })
                     }
                     return item
@@ -80,9 +88,9 @@ function store(state = initialState, action) {
         
         case CHANGE_COMPLETED:
             return Object.assign({}, state, {
-                chooseAllChecked: action.check,
+                chooseAllChecked: action.body.completed,
                 items: state.items.map((item) => {
-                    if (item.id === action.id) {
+                    if (item.id === action.body.id) {
                         return Object.assign({}, item, {
                             completed: !item.completed
                         })
@@ -116,11 +124,6 @@ function store(state = initialState, action) {
                 state.items.filter((item) => (item.id !== state.itemIdToBeDeleted)) :
                 state.items.filter((item) => (item.completed !== true)),
                 modal: false
-            })
-
-        case MULTIPLE_DELITING:
-            return Object.assign({}, state, {
-                deleteManyItems: action.deleteManyItems
             })
 
         default:

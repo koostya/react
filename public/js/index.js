@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7c0d661a397eb4610ce0"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f17d8bc9cb9545b51b75"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -940,36 +940,32 @@ if (process.env.NODE_ENV === 'production') {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Filters = exports.GET_ALL_ITEMS = exports.CONFIRM_MODAL = exports.MULTIPLE_DELITING = exports.SHOW_MODAL = exports.UPDATE_ITEM = exports.CHANGE_EDITING = exports.CHANGE_COMPLETED = exports.SET_ALL_CHECKED = exports.SET_FILTER = exports.REMOVE_ITEM = exports.ADD_ITEM = undefined;
+exports.Filters = exports.GET_ITEMS_FOR_USER = exports.SUBMIT_FORM = exports.GET_ALL_ITEMS = exports.CONFIRM_MODAL = exports.SHOW_MODAL = exports.UPDATE_ITEM = exports.CHANGE_EDITING = exports.CHANGE_COMPLETED = exports.SET_ALL_CHECKED = exports.SET_FILTER = exports.ADD_ITEM = undefined;
+exports.submitForm = submitForm;
+exports.getItemsForUser = getItemsForUser;
 exports.getAllItems = getAllItems;
 exports.addItem = addItem;
 exports.showModal = showModal;
 exports.confirmModal = confirmModal;
-exports.multipleDeliting = multipleDeliting;
 exports.changeEditing = changeEditing;
 exports.updateItem = updateItem;
-exports.removeItem = removeItem;
 exports.changeCompleted = changeCompleted;
 exports.setFilter = setFilter;
 exports.setAllChecked = setAllChecked;
 
-var _isomorphicFetch = __webpack_require__(96);
-
-var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _fetch = __webpack_require__(96);
 
 var ADD_ITEM = exports.ADD_ITEM = 'ADD_ITEM';
-var REMOVE_ITEM = exports.REMOVE_ITEM = 'REMOVE_ITEM';
 var SET_FILTER = exports.SET_FILTER = 'SET_FILTER';
 var SET_ALL_CHECKED = exports.SET_ALL_CHECKED = 'SET_ALL_CHECKED';
 var CHANGE_COMPLETED = exports.CHANGE_COMPLETED = 'CHANGE_COMPLETED';
 var CHANGE_EDITING = exports.CHANGE_EDITING = 'CHANGE_EDITING';
 var UPDATE_ITEM = exports.UPDATE_ITEM = 'UPDATE_ITEM';
 var SHOW_MODAL = exports.SHOW_MODAL = 'SHOW_MODAL';
-var MULTIPLE_DELITING = exports.MULTIPLE_DELITING = 'MULTIPLE_DELITING';
 var CONFIRM_MODAL = exports.CONFIRM_MODAL = 'CONFIRM_MODAL';
 var GET_ALL_ITEMS = exports.GET_ALL_ITEMS = 'GET_ALL_ITEMS';
+var SUBMIT_FORM = exports.SUBMIT_FORM = 'SUBMIT_FORM';
+var GET_ITEMS_FOR_USER = exports.GET_ITEMS_FOR_USER = 'GET_ITEMS_FOR_USER';
 
 var Filters = exports.Filters = {
     ALL: 'ALL',
@@ -977,42 +973,32 @@ var Filters = exports.Filters = {
     COMPLETED: 'COMPLETED'
 };
 
-function getAllItems() {
-    return function (dispatch) {
-        (0, _isomorphicFetch2.default)('/items', {
-            method: 'GET'
-        }).then(function (res) {
-            return res.json();
-        }).then(function (items) {
-            dispatch({
-                type: GET_ALL_ITEMS,
-                items: items
-            });
-        });
-    };
+function submitForm(id, name, password) {
+    return (0, _fetch.send)('/user', 'POST', JSON.stringify({
+        id: id,
+        name: name,
+        password: password
+    }), SUBMIT_FORM);
 }
 
-function addItem(id, text, completed, editing) {
-    (0, _isomorphicFetch2.default)('/items', {
-        method: 'POST',
-        header: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: id,
-            text: text,
-            completed: completed,
-            editing: editing
-        })
-    });
+function getItemsForUser(userID) {
+    return (0, _fetch.send)('/user/items/${userID}', 'GET', JSON.stringify({
+        userID: userID
+    }), GET_ITEMS_FOR_USER);
+}
 
-    return {
-        type: ADD_ITEM,
+function getAllItems() {
+    return (0, _fetch.send)('/items', 'GET', undefined, GET_ALL_ITEMS);
+}
+
+function addItem(id, text, completed, editing, userID) {
+    return (0, _fetch.send)('/item', 'POST', JSON.stringify({
         id: id,
         text: text,
         completed: completed,
-        editing: editing
-    };
+        editing: editing,
+        userID: userID
+    }), ADD_ITEM);
 }
 
 function showModal(deleteManyItems, itemIdToBeDeleted) {
@@ -1024,24 +1010,10 @@ function showModal(deleteManyItems, itemIdToBeDeleted) {
 }
 
 function confirmModal(itemIdToBeDeleted, deleteManyItems) {
-    (0, _isomorphicFetch2.default)('/items/${itemIdToBeDeleted}', {
-        method: 'DELETE',
-        body: JSON.stringify({
-            id: itemIdToBeDeleted,
-            deleteManyItems: deleteManyItems
-        })
-    });
-
-    return {
-        type: CONFIRM_MODAL
-    };
-}
-
-function multipleDeliting(deleteManyItems) {
-    return {
-        type: MULTIPLE_DELITING,
+    return (0, _fetch.send)('/items/${itemIdToBeDeleted}', 'DELETE', JSON.stringify({
+        id: itemIdToBeDeleted,
         deleteManyItems: deleteManyItems
-    };
+    }), CONFIRM_MODAL);
 }
 
 function changeEditing(id) {
@@ -1052,45 +1024,19 @@ function changeEditing(id) {
 }
 
 function updateItem(id, completed, text) {
-    (0, _isomorphicFetch2.default)('/items/${id}', {
-        method: 'PUT',
-        body: JSON.stringify({
-            id: id,
-            completed: completed,
-            text: text
-        })
-    });
-
-    return {
-        type: UPDATE_ITEM,
+    return (0, _fetch.send)('/items/${id}', 'PUT', JSON.stringify({
         id: id,
+        completed: completed,
         text: text
-    };
-}
-
-function removeItem(id, deleteManyItems) {
-    return {
-        type: REMOVE_ITEM,
-        id: id,
-        deleteManyItems: deleteManyItems
-    };
+    }), UPDATE_ITEM);
 }
 
 function changeCompleted(id, check, text) {
-    (0, _isomorphicFetch2.default)('/items/${id}', {
-        method: 'PUT',
-        body: JSON.stringify({
-            id: id,
-            completed: check,
-            text: text
-        })
-    });
-
-    return {
-        type: CHANGE_COMPLETED,
+    return (0, _fetch.send)('/items/${id}', 'PUT', JSON.stringify({
         id: id,
-        check: check
-    };
+        completed: check,
+        text: text
+    }), CHANGE_COMPLETED);
 }
 
 function setFilter(filter) {
@@ -1101,17 +1047,9 @@ function setFilter(filter) {
 }
 
 function setAllChecked(allChecked) {
-    (0, _isomorphicFetch2.default)('/items', {
-        method: 'PUT',
-        body: JSON.stringify({
-            allChecked: allChecked
-        })
-    });
-
-    return {
-        type: SET_ALL_CHECKED,
+    return (0, _fetch.send)('/items', 'PUT', JSON.stringify({
         allChecked: allChecked
-    };
+    }), SET_ALL_CHECKED);
 }
 
 /***/ }),
@@ -3328,7 +3266,7 @@ var _App = __webpack_require__(55);
 
 var _App2 = _interopRequireDefault(_App);
 
-var _reduxThunk = __webpack_require__(101);
+var _reduxThunk = __webpack_require__(103);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -3336,7 +3274,7 @@ var _redux = __webpack_require__(10);
 
 var _reactRedux = __webpack_require__(3);
 
-var _main = __webpack_require__(102);
+var _main = __webpack_require__(104);
 
 var _main2 = _interopRequireDefault(_main);
 
@@ -20835,13 +20773,17 @@ var _Input = __webpack_require__(95);
 
 var _Input2 = _interopRequireDefault(_Input);
 
-var _List = __webpack_require__(98);
+var _List = __webpack_require__(99);
 
 var _List2 = _interopRequireDefault(_List);
 
-var _Menu = __webpack_require__(100);
+var _Menu = __webpack_require__(101);
 
 var _Menu2 = _interopRequireDefault(_Menu);
+
+var _Form = __webpack_require__(102);
+
+var _Form2 = _interopRequireDefault(_Form);
 
 var _Modal = __webpack_require__(12);
 
@@ -20913,23 +20855,29 @@ var App = function (_Component) {
             var _props = this.props,
                 filter = _props.filter,
                 items = _props.items,
-                modal = _props.modal;
+                modal = _props.modal,
+                logged = _props.logged;
 
             return _react2.default.createElement(
                 'div',
-                { className: 'mvc', id: 'mvc' },
-                _react2.default.createElement(_Input2.default, {
-                    chooseAllCheck: this.chooseAllCheck
-                }),
-                _react2.default.createElement(_List2.default, {
-                    items: this.filterItems(filter),
-                    store: this.props.data,
-                    chooseAllCheck: this.chooseAllCheck
-                }),
-                items.length > 0 ? _react2.default.createElement(_Menu2.default, {
-                    itemsLeft: this.checkHowManyItemsLeft(this.props)
-                }) : '',
-                modal && _react2.default.createElement(_Modal2.default, null)
+                { className: 'mvc_wrap' },
+                logged ? '' : _react2.default.createElement(_Form2.default, null),
+                logged ? _react2.default.createElement(
+                    'div',
+                    { className: 'mvc', id: 'mvc' },
+                    _react2.default.createElement(_Input2.default, {
+                        chooseAllCheck: this.chooseAllCheck
+                    }),
+                    _react2.default.createElement(_List2.default, {
+                        items: this.filterItems(filter),
+                        store: this.props.data,
+                        chooseAllCheck: this.chooseAllCheck
+                    }),
+                    items.length > 0 ? _react2.default.createElement(_Menu2.default, {
+                        itemsLeft: this.checkHowManyItemsLeft(this.props)
+                    }) : '',
+                    modal && _react2.default.createElement(_Modal2.default, null)
+                ) : ''
             );
         }
     }]);
@@ -20941,7 +20889,8 @@ exports.default = (0, _reactRedux.connect)(function (state) {
     return {
         filter: state.store.filter,
         items: state.store.items,
-        modal: state.store.modal
+        modal: state.store.modal,
+        logged: state.store.logged
     };
 })(App);
 
@@ -23353,7 +23302,7 @@ var Input = function (_Component) {
 
         _this.inputEnter = function (e) {
             if (e.key === 'Enter') {
-                _this.props.dispatch((0, _actions.addItem)(_this.generateID(), e.target.value, false, false));
+                _this.props.dispatch((0, _actions.addItem)(_this.generateID(), e.target.value, false, false, _this.props.user));
 
                 _this.setState({
                     text: ''
@@ -23376,11 +23325,6 @@ var Input = function (_Component) {
     }
 
     _createClass(Input, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(nextProps) {
-            // console.log(this.props)
-        }
-    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
@@ -23429,7 +23373,8 @@ var Input = function (_Component) {
 exports.default = (0, _reactRedux.connect)(function (state) {
     return {
         items: state.store.items,
-        chooseAllChecked: state.store.chooseAllChecked
+        chooseAllChecked: state.store.chooseAllChecked,
+        user: state.store.user
     };
 })(Input);
 
@@ -23437,16 +23382,54 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 /* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.send = send;
+
+var _isomorphicFetch = __webpack_require__(97);
+
+var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function send(url, method, body, type) {
+    return function (dispatch) {
+        (0, _isomorphicFetch2.default)(url, {
+            method: method,
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(function (res) {
+            return res.json();
+        }).then(function (json) {
+            console.log(json);
+            dispatch({
+                type: type,
+                body: json
+            });
+        });
+    };
+}
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // the whatwg-fetch polyfill installs the fetch() function
 // on the global object (window or self)
 //
 // Return that as the export for use in Webpack, Browserify etc.
-__webpack_require__(97);
+__webpack_require__(98);
 module.exports = self.fetch.bind(self);
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 (function(self) {
@@ -23913,7 +23896,7 @@ module.exports = self.fetch.bind(self);
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23929,7 +23912,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Item = __webpack_require__(99);
+var _Item = __webpack_require__(100);
 
 var _Item2 = _interopRequireDefault(_Item);
 
@@ -23983,7 +23966,7 @@ var List = function (_Component) {
 exports.default = List;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24123,7 +24106,7 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 })(Item);
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24254,7 +24237,124 @@ exports.default = (0, _reactRedux.connect)(function (state) {
 })(Menu);
 
 /***/ }),
-/* 101 */
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(3);
+
+var _actions = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Form = function (_Component) {
+    _inherits(Form, _Component);
+
+    function Form(props) {
+        _classCallCheck(this, Form);
+
+        var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, props));
+
+        _this.handlerName = function (e) {
+            _this.setState({
+                name: e.target.value
+            });
+        };
+
+        _this.handlerPassword = function (e) {
+            _this.setState({
+                password: e.target.value
+            });
+        };
+
+        _this.formSubmitting = function () {
+            console.log('Send form: ' + _this.state.name + ' ' + _this.state.password);
+
+            _this.setState({
+                name: '',
+                password: ''
+            });
+
+            _this.props.dispatch((0, _actions.submitForm)(_this.generateID(), _this.state.name, _this.state.password));
+        };
+
+        _this.generateID = function () {
+            return new Date().getTime();
+        };
+
+        _this.state = {
+            name: '',
+            password: ''
+        };
+        return _this;
+    }
+
+    _createClass(Form, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var dispatch = this.props.dispatch;
+
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'login_form' },
+                _react2.default.createElement('input', {
+                    className: 'name_input',
+                    onChange: function onChange(e) {
+                        _this2.handlerName(e);
+                    },
+                    value: this.state.name
+                }),
+                _react2.default.createElement('input', {
+                    className: 'password_input',
+                    onChange: function onChange(e) {
+                        _this2.handlerPassword(e);
+                    },
+                    value: this.state.password
+                }),
+                _react2.default.createElement(
+                    'div',
+                    {
+                        className: 'form_button',
+                        onClick: function onClick() {
+                            return _this2.formSubmitting();
+                        }
+                    },
+                    'Log in'
+                )
+            );
+        }
+    }]);
+
+    return Form;
+}(_react.Component);
+
+exports.default = (0, _reactRedux.connect)(function (state) {
+    return {};
+})(Form);
+
+/***/ }),
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24283,7 +24383,7 @@ thunk.withExtraArgument = createThunkMiddleware;
 exports['default'] = thunk;
 
 /***/ }),
-/* 102 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24305,7 +24405,9 @@ var initialState = {
     chooseAllChecked: false,
     deleteManyItems: false,
     modal: false,
-    itemIdToBeDeleted: 234
+    itemIdToBeDeleted: 234,
+    user: '',
+    logged: false
 };
 
 function store() {
@@ -24316,7 +24418,19 @@ function store() {
 
         case _actions.GET_ALL_ITEMS:
             return Object.assign({}, state, {
-                items: action.items
+                items: action.body
+            });
+
+        case _actions.GET_ITEMS_FOR_USER:
+            return Object.assign({}, state, {
+                items: action.body.items
+            });
+
+        case _actions.SUBMIT_FORM:
+            return Object.assign({}, state, {
+                items: action.body.items,
+                logged: action.body.logged,
+                user: action.body.id
             });
 
         case _actions.SET_FILTER:
@@ -24326,11 +24440,11 @@ function store() {
 
         case _actions.SET_ALL_CHECKED:
             return Object.assign({}, state, {
-                chooseAllChecked: action.allChecked,
+                chooseAllChecked: action.body.allChecked,
                 items: state.items.map(function (item) {
-                    if (item.completed !== action.allChecked) {
+                    if (item.completed !== action.body.allChecked) {
                         return Object.assign({}, item, {
-                            completed: action.allChecked
+                            completed: action.body.allChecked
                         });
                     }
                     return item;
@@ -24340,27 +24454,19 @@ function store() {
         case _actions.ADD_ITEM:
             return Object.assign({}, state, {
                 items: [].concat(_toConsumableArray(state.items), [{
-                    text: action.text,
-                    completed: action.completed,
-                    id: action.id,
-                    editing: action.editing
+                    text: action.body.text,
+                    completed: action.body.completed,
+                    id: action.body.id,
+                    editing: action.body.editing
                 }])
-            });
-
-        case _actions.REMOVE_ITEM:
-            return Object.assign({}, state, {
-                items: state.items.filter(function (item, i, arr) {
-                    return item.id !== action.id;
-                }),
-                deleteManyItems: action.deleteManyItems
             });
 
         case _actions.UPDATE_ITEM:
             return Object.assign({}, state, {
                 items: state.items.map(function (item) {
-                    if (item.id === action.id) {
+                    if (item.id === action.body.id) {
                         return Object.assign({}, item, {
-                            text: action.text
+                            text: action.body.text
                         });
                     }
                     return item;
@@ -24369,9 +24475,9 @@ function store() {
 
         case _actions.CHANGE_COMPLETED:
             return Object.assign({}, state, {
-                chooseAllChecked: action.check,
+                chooseAllChecked: action.body.completed,
                 items: state.items.map(function (item) {
-                    if (item.id === action.id) {
+                    if (item.id === action.body.id) {
                         return Object.assign({}, item, {
                             completed: !item.completed
                         });
@@ -24407,11 +24513,6 @@ function store() {
                     return item.completed !== true;
                 }),
                 modal: false
-            });
-
-        case _actions.MULTIPLE_DELITING:
-            return Object.assign({}, state, {
-                deleteManyItems: action.deleteManyItems
             });
 
         default:
