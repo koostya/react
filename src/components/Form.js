@@ -26,7 +26,7 @@ class Form extends Component {
     }
 
     formSubmitting = () => {
-        console.log('Send form: ' + this.state.name + ' ' + this.state.password)
+        // console.log('Send form: ' + this.state.name + ' ' + this.state.password)
 
         this.setState({
             name: '',
@@ -65,6 +65,8 @@ class Form extends Component {
     }
 }
 
-export default connect(
+const form = connect(
     state => ({})
 )(Form);
+
+export default form;

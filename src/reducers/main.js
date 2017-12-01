@@ -10,7 +10,7 @@ import {
     GET_ALL_ITEMS,
     SUBMIT_FORM,
     GET_ITEMS_FOR_USER
-} from '../actions/actions';
+} from '../actions/actions'
 
 const initialState = {
     filter: 'ALL',
@@ -21,7 +21,7 @@ const initialState = {
     itemIdToBeDeleted: 234,
     user: '',
     logged: false
-};
+}
 
 function store(state = initialState, action) {
     switch(action.type) {
@@ -40,7 +40,7 @@ function store(state = initialState, action) {
             return Object.assign({}, state, {
                 items: action.body.items,
                 logged: action.body.logged,
-                user: action.body.id
+                user: action.body.name
             })
 
         case SET_FILTER:
@@ -69,7 +69,8 @@ function store(state = initialState, action) {
                         text: action.body.text,
                         completed: action.body.completed,
                         id: action.body.id,
-                        editing: action.body.editing
+                        editing: action.body.editing,
+                        userName: action.body.userName
                     }
                 ]
             })
@@ -131,10 +132,12 @@ function store(state = initialState, action) {
     }
 }
 
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux'
+import { createReducer } from 'react-router-redux'
+import createBrowserHistory from 'history/createBrowserHistory'
 
-const app = combineReducers({
+export const history = createBrowserHistory({ basename : '/' })
+
+export default combineReducers({
     store
-});
-
-export default app;
+})

@@ -1,29 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './containers/App';
-import thunk from 'redux-thunk';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { registration as Registration } from './containers/Registration'
+import { app as App } from './containers/App'
+import thunk from 'redux-thunk'
 
-import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux'
-import app from './reducers/main';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
+import { routerMiddleware } from 'react-router-redux'
 
-import { getAllItems } from './actions/actions';
+import { createStore, applyMiddleware, compose } from 'redux'
+import { Provider, connect } from 'react-redux'
+
+import reducer, { history } from './reducers/main'
+import { getAllItems } from './actions/actions'
 
 const store = createStore(
-  app,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  applyMiddleware(thunk)
-);
+  reducer,
+  applyMiddleware(routerMiddleware(history), thunk)
+)
 
-store.dispatch(getAllItems())
-
-const render = () => {ReactDOM.render(
+export const Application = () => {ReactDOM.render(
   <Provider store={store}>
-    <App data={store}/>
+    <Router>
+      <Switch>
+        <Route path="/list">
+          <App />
+        </Route>
+        <Route path="/">
+          <Registration />
+        </Route>
+      </Switch>
+    </Router>
   </Provider>,
   document.getElementById('root')
 )}
 
-store.subscribe(render);
+store.subscribe(Application)
 
-render();
+Application()

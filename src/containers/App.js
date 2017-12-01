@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
-import Form from '../components/Form';
 import DeleteModal from '../components/Modal';
 
 import { getItemsForUser } from '../actions/actions';
 
-class App extends Component {
+export class App extends Component {
 
     filterItems = value => {
         let items = this.props.items,
@@ -51,48 +50,39 @@ class App extends Component {
     }
     
     render() {
-        const { filter, items, modal, logged } = this.props;
+        const { filter, items, modal } = this.props;
         return (
             <div className="mvc_wrap">
-            {logged ?
-                ''
-                :
-                <Form />
-            }
-                {logged ?
-                    <div className="mvc" id="mvc">
-                        <Input 
-                            chooseAllCheck={this.chooseAllCheck}
+                <div className="mvc" id="mvc">
+                    <Input 
+                        chooseAllCheck={this.chooseAllCheck}
+                    />
+                    <List
+                        items={this.filterItems(filter)}
+                        store={this.props.data}
+                        chooseAllCheck={this.chooseAllCheck}
+                    />
+                    {items.length > 0 ?
+                        <Menu 
+                            itemsLeft={this.checkHowManyItemsLeft(this.props)}
                         />
-                        <List
-                            items={this.filterItems(filter)}
-                            store={this.props.data}
-                            chooseAllCheck={this.chooseAllCheck}
-                        />
-                        {items.length > 0 ?
-                            <Menu 
-                                itemsLeft={this.checkHowManyItemsLeft(this.props)}
-                            />
-                            :
-                            ''
-                        }
-                        {modal &&
-                            <DeleteModal />
-                        }
-                    </div>
-                    :
-                    ''
-                }
+                        :
+                        ''
+                    }
+                    {modal &&
+                        <DeleteModal />
+                    }
+                </div>
             </div>
         );
     }
 }
 
-export default connect(
+export const app = connect(
     state => ({
         filter: state.store.filter,
         items: state.store.items,
         modal: state.store.modal,
-        logged: state.store.logged
+        data: state.store
     })
 )(App);

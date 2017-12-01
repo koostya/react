@@ -6,7 +6,7 @@ const itemSchema = new Schema({
   text: String,
   completed: Boolean,
   editing: Boolean,
-  userID: String
+  userName: String
 })
 
 const Item = mongoose.model('Item', itemSchema)

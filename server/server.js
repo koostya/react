@@ -2,6 +2,7 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const BodyParser = require('koa-body-parser')
 const serve = require('koa-static')
+const historyApiFallback = require('koa-history-api-fallback')
 
 const webpack = require('webpack')
 const webpackConfig = require('/home/gnom/workspace/react/mvcapp/webpack.config.js')
@@ -20,7 +21,11 @@ app.use(require("koa-webpack-dev-middleware")(compiler))
 app.use(require("koa-webpack-hot-middleware")(compiler))
 
 app.use(BodyParser())
-app.use(serve('/home/gnom/workspace/react/mvcapp/public'))
+app.use(serve('./public'))
+app.use(historyApiFallback({
+    index: '/index.html',
+    list: '/index.html'
+}))
 
 router.post("/item", async (ctx) => {
     let body = JSON.parse(ctx.request.body)
@@ -30,12 +35,33 @@ router.post("/item", async (ctx) => {
         text: body.text,
         completed: body.completed,
         editing: body.editing,
-        userID: body.userID
+        userName: body.userName
     })
 
     item.save()
 
     ctx.response.body = ctx.request.body
+})
+
+// router.get("/list", async (ctx) => {
+//     console.log('list')
+// })
+
+router.get("/list/:name", async (ctx) => {
+    let name = ctx.request.query.name,
+        resBody = {}
+    console.log(ctx.request.query.name)
+    await Item.find({userName: name}, function(err, items) {
+        // console.log(items)
+        resBody.items = items
+        resBody.logged = true
+
+        console.log(resBody)
+
+        // ctx.response.body = JSON.stringify(resBody)
+        // serve('./public/list.html')
+        ctx.redirect('/list.html')
+    })
 })
 
 router.get("/items", async (ctx) => {
@@ -100,26 +126,24 @@ router.post("/user", async (ctx) => {
         } else {
             reqBody.logged = true
     
-            console.log(reqBody)
-    
-            ctx.response.body = reqBody
+            ctx.redirect('/list/:name?name=' + reqBody.name)
         }
     })
 })
 
-router.get("/user/items/${userID}", async (ctx) => {
-    // let reqBody = JSON.parse(ctx.request.body)
-    cosnole.log(ctx.request.query)
+// router.get("/user/items/${userID}", async (ctx) => {
+//     // let reqBody = JSON.parse(ctx.request.body)
+//     cosnole.log(ctx.request.query)
 
-    await Item.find({userID: reqBody.userID}, function(err, items) {
-        reqBody.items = items
-        reqBody.logged = true
+//     await Item.find({userID: reqBody.userID}, function(err, items) {
+//         reqBody.items = items
+//         reqBody.logged = true
 
-        console.log(reqBody)
+//         console.log(reqBody)
 
-        ctx.response.body = reqBody
-    })
-})
+//         ctx.response.body = reqBody
+//     })
+// })
 
 app.use(router.routes());
 app.use(router.allowedMethods());

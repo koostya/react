@@ -27,22 +27,20 @@ export function submitForm(id, name, password) {
 }
 
 export function getItemsForUser(userID) {
-    return send('/user/items/${userID}', 'GET', JSON.stringify({
-        userID: userID
-    }), GET_ITEMS_FOR_USER)
+    return send('/user/items/${userID}', 'GET', undefined, GET_ITEMS_FOR_USER)
 }
 
 export function getAllItems() {
     return send('/items', 'GET', undefined, GET_ALL_ITEMS)
 }
 
-export function addItem(id, text, completed, editing, userID) {
+export function addItem(id, text, completed, editing, userName) {
     return send('/item', 'POST', JSON.stringify({
         id: id,
         text: text,
         completed: completed,
         editing: editing,
-        userID: userID
+        userName: userName
     }), ADD_ITEM)
 }
 
