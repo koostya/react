@@ -5,7 +5,7 @@ const serve = require('koa-static')
 const historyApiFallback = require('koa-history-api-fallback')
 
 const webpack = require('webpack')
-const webpackConfig = require('/home/gnom/workspace/react/mvcapp/webpack.config.js')
+const webpackConfig = require('../webpack.config.js')
 const compiler = webpack(webpackConfig)
 
 const app = new Koa()
