@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import { changeCompleted, changeEditing, updateItem, showModal } from '../actions/actions';
 
-import Modal from '../components/Modal';
-
 class Item extends Component {
     constructor(props) {
         super(props);

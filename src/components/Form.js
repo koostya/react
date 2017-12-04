@@ -26,22 +26,18 @@ class Form extends Component {
     }
 
     formSubmitting = () => {
-        // console.log('Send form: ' + this.state.name + ' ' + this.state.password)
+        this.props.dispatch(submitForm(this.generateID(), this.state.name, this.state.password))
 
         this.setState({
             name: '',
             password: ''
         })
-
-        this.props.dispatch(submitForm(this.generateID(), this.state.name, this.state.password))
     }
 
     generateID = () =>  new Date().getTime()
 
 
     render() {
-        const { dispatch } = this.props
-
         return(
             <div className="login_form">
                 <input 
@@ -65,8 +61,6 @@ class Form extends Component {
     }
 }
 
-const form = connect(
+export const form = connect(
     state => ({})
 )(Form);
-
-export default form;

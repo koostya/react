@@ -133,7 +133,6 @@ function store(state = initialState, action) {
 }
 
 import { combineReducers } from 'redux'
-import { createReducer } from 'react-router-redux'
 import createBrowserHistory from 'history/createBrowserHistory'
 
 export const history = createBrowserHistory({ basename : '/' })

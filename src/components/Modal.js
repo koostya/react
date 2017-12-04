@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { showModal, confirmModal } from '../actions/actions';
 
 class Modal extends Component {
-
     render() {
         const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems, itemIdToBeDeleted } = this.props
         return isVisible ? (

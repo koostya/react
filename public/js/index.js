@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "143ae329a1d52f1235e0"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7d7935be9bbeb818db4b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -5336,18 +5336,11 @@ var Application = exports.Application = function Application() {
       _reactRouterDom.BrowserRouter,
       null,
       _react2.default.createElement(
-        _reactRouterDom.Switch,
-        null,
-        _react2.default.createElement(
-          _reactRouterDom.Route,
-          { path: '/list' },
-          _react2.default.createElement(_App.app, null)
-        ),
-        _react2.default.createElement(
-          _reactRouterDom.Route,
-          { path: '/' },
-          _react2.default.createElement(_Registration.registration, null)
-        )
+        _reactRouterDom.Route,
+        { path: '/', component: _Registration.registration },
+        _react2.default.createElement(_reactRouterDom.IndexRoute, { to: '/list' }),
+        _react2.default.createElement(_reactRouterDom.Route, { path: '/list', component: _App.app }),
+        _react2.default.createElement(_reactRouterDom.Redirect, { to: '/list' })
       )
     )
   ), document.getElementById('root'));

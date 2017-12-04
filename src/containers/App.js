@@ -6,8 +6,6 @@ import List from '../components/List';
 import Menu from '../components/Menu';
 import DeleteModal from '../components/Modal';
 
-import { getItemsForUser } from '../actions/actions';
-
 export class App extends Component {
 
     filterItems = value => {

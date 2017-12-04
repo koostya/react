@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Form from '../components/Form';
-
-import { getItemsForUser } from '../actions/actions';
+import { form as Form } from '../components/Form';
 
 export class Registration extends Component {
         

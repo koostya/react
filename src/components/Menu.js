@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import { setFilter, showModal } from '../actions/actions';
 
-import Modal from '../components/Modal';
-
 class Menu extends Component {
 
     render() {
