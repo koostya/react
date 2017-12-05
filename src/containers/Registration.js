@@ -16,7 +16,7 @@ export class Registration extends Component {
     }
 }
 
-export const registration = connect(
+export default connect(
     state => ({
         logged: state.store.logged
     })

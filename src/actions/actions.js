@@ -1,4 +1,5 @@
 import { send } from '../utils/fetch'
+import { history } from '../reducers/main'
 
 export const ADD_ITEM = 'ADD_ITEM';
 export const SET_FILTER = 'SET_FILTER';
@@ -11,6 +12,7 @@ export const CONFIRM_MODAL = 'CONFIRM_MODAL';
 export const GET_ALL_ITEMS = 'GET_ALL_ITEMS';
 export const SUBMIT_FORM = 'SUBMIT_FORM';
 export const GET_ITEMS_FOR_USER = 'GET_ITEMS_FOR_USER';
+export const LOGOUT = 'LOGOUT';
 
 export const Filters = {
     ALL: 'ALL',
@@ -19,15 +21,45 @@ export const Filters = {
 }
 
 export function submitForm(id, name, password) {
-    return send('/user', 'POST', JSON.stringify({
-        id: id,
-        name: name,
-        password: password
-    }), SUBMIT_FORM)
+    return (dispatch) => {
+        fetch('/user', {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                name: name,
+                password: password
+            })
+        }).then((res) => {
+            return res.json()
+        }).then((json) => {
+            localStorage.setItem('user', json.name)
+            localStorage.setItem('login', true)
+
+            history.push('/list')   
+
+            dispatch({
+                type: SUBMIT_FORM,
+                body: json
+            })
+        })
+    }
 }
 
-export function getItemsForUser(userID) {
-    return send('/user/items/${userID}', 'GET', undefined, GET_ITEMS_FOR_USER)
+export function logout() {
+    localStorage.clear()
+
+    history.push('/login')  
+
+    return {
+        type: LOGOUT
+    }
+}
+
+export function getItemsForUser(name) {
+    return send('/list/user/:name?name=' + name, 'GET', undefined, GET_ITEMS_FOR_USER)
 }
 
 export function getAllItems() {
@@ -52,11 +84,8 @@ export function showModal(deleteManyItems, itemIdToBeDeleted) {
     }
 }
 
-export function confirmModal(itemIdToBeDeleted, deleteManyItems) {
-    return send('/items/${itemIdToBeDeleted}', 'DELETE', JSON.stringify({
-        id: itemIdToBeDeleted,
-        deleteManyItems: deleteManyItems
-    }), CONFIRM_MODAL)
+export function confirmModal(itemIdToBeDeleted, deleteManyItems, user) {
+    return send('/items/:id?id=' + itemIdToBeDeleted + '&deleteManyItems=' + deleteManyItems + '&user=' + user, 'DELETE', {}, CONFIRM_MODAL)
 }
 
 export function changeEditing(id) {

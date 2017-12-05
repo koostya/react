@@ -12,14 +12,10 @@ class Item extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.props.chooseAllCheck(nextProps.store.getState().store)
-    }
-
     editInput = (e) => {
         if(e.key === 'Enter' || e.key === 'Esc') {
-            this.props.store.dispatch(updateItem(this.props.id, this.props.completed, this.state.text));
-            this.props.store.dispatch(changeEditing(this.props.id));
+            this.props.dispatch(updateItem(this.props.id, this.props.completed, this.state.text));
+            this.props.dispatch(changeEditing(this.props.id));
         }
     }
 
@@ -36,7 +32,7 @@ class Item extends Component {
             <li>
                 <div 
                     className={this.props.completed ? 'item completed' : 'item'} 
-                    onDoubleClick={() => (dispatch(changeEditing(this.props.id)))}
+                    onDoubleClick={() => (this.props.dispatch(changeEditing(this.props.id)))}
                 >
                     <div className="checkbox">
                         <input 

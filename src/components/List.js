@@ -14,7 +14,6 @@ class List extends Component {
                             text={item.text}
                             completed={item.completed}
                             editing={item.editing}
-                            store={this.props.store}
                             chooseAllCheck={this.props.chooseAllCheck}
                         />
                     ))}

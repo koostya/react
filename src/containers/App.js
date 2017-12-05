@@ -6,7 +6,13 @@ import List from '../components/List';
 import Menu from '../components/Menu';
 import DeleteModal from '../components/Modal';
 
+import { getItemsForUser, logout } from '../actions/actions';
+
 export class App extends Component {
+
+    componentDidMount() {
+        this.props.dispatch(getItemsForUser(this.props.user))
+    }
 
     filterItems = value => {
         let items = this.props.items,
@@ -23,10 +29,10 @@ export class App extends Component {
         })
     }
 
-    checkHowManyItemsLeft = (nextProps) => {
+    checkHowManyItemsLeft = () => {
         let countLeftItems = 0;
 
-        nextProps.items.map((item) => {
+        this.props.items.map((item) => {
             if(item.completed === false) {
                 countLeftItems++;
             }
@@ -48,7 +54,7 @@ export class App extends Component {
     }
     
     render() {
-        const { filter, items, modal } = this.props;
+        const { filter, items, modal, data, dispatch } = this.props;
         return (
             <div className="mvc_wrap">
                 <div className="mvc" id="mvc">
@@ -57,12 +63,11 @@ export class App extends Component {
                     />
                     <List
                         items={this.filterItems(filter)}
-                        store={this.props.data}
                         chooseAllCheck={this.chooseAllCheck}
                     />
                     {items.length > 0 ?
                         <Menu 
-                            itemsLeft={this.checkHowManyItemsLeft(this.props)}
+                            itemsLeft={this.checkHowManyItemsLeft()}
                         />
                         :
                         ''
@@ -70,17 +75,19 @@ export class App extends Component {
                     {modal &&
                         <DeleteModal />
                     }
+                    <div className="logout_button" onClick={() => (dispatch(logout()))}></div>
                 </div>
             </div>
         );
     }
 }
 
-export const app = connect(
+export default connect(
     state => ({
         filter: state.store.filter,
         items: state.store.items,
         modal: state.store.modal,
-        data: state.store
+        data: state.store,
+        user: localStorage.getItem('user')
     })
 )(App);

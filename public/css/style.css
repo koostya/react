@@ -412,6 +412,7 @@ li {
     margin-bottom: 10px;
     border-radius: 7px;
     box-shadow: 0 0 10px -3px rgba(255, 64, 64, .8);
+    text-align: center;
 }
 
 .name_input:focus,
@@ -423,5 +424,45 @@ li {
     width: 500px;
 }
 
+.logout_button {
+    position: fixed;
+    display: block;
+    top: 50px;
+    left: 50px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.logout_button:hover:before,
+.logout_button:hover:after {
+    background-color: rgba(0,0,0, .8);
+}
+
+.logout_button:before {
+    content: '';
+    position: absolute;
+    top: 62%;
+    left: 50%;
+    width: 50%;
+    height: 5px;
+    background-color: #ccc;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 5px;
+    transition: all .3s;
+}
+
+.logout_button:after {
+    content: '';
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    width: 50%;
+    height: 5px;
+    background-color: #ccc;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    border-radius: 5px;
+    transition: all .3s;
+}
 
 

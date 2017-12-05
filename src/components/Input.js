@@ -70,6 +70,6 @@ export default connect(
     state => ({
         items: state.store.items,
         chooseAllChecked: state.store.chooseAllChecked,
-        user: state.store.user
+        user: localStorage.getItem('user')
     })
 )(Input);

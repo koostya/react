@@ -47,6 +47,7 @@ class Form extends Component {
                 />
                 <input 
                     className="password_input"
+                    type="password"
                     onChange={(e) => {this.handlerPassword(e)}}
                     value={this.state.password}
                 />

@@ -40,20 +40,16 @@ router.post("/item", async (ctx) => {
     ctx.response.body = ctx.request.body
 })
 
-router.get("/list/:name", async (ctx) => {
+router.get("/list/user/:name", async (ctx) => {
     const name = ctx.request.query.name,
         resBody = {}
 
-    console.log(ctx.request.query.name)
-
-    const items = Item.find({userName: name})
-
-    console.log(items)
-
+    const items = await Item.find({userName: name})
+    
     resBody.items = items
-    resBody.logged = true
+    resBody.name = name
 
-    ctx.response.body = JSON.stringify(resBody)
+    ctx.response.body = resBody
 })
 
 router.get("/items", async (ctx) => {
@@ -62,16 +58,14 @@ router.get("/items", async (ctx) => {
 })
 
 router.delete("/items/:id", async (ctx) => {
-    let body = JSON.parse(ctx.request.body)
+    const deleteManyItems = ctx.request.query.deleteManyItems,
+        id = ctx.request.query.id,
+        user = ctx.request.query.user
 
-    if(!body.deleteManyItems) {
-        await Item.remove({'id':body.id}, function(err) { 
-            console.log('Item was removed')
-        })
-    } else {
-        await Item.remove({'completed':true}, function(err) { 
-            console.log('Items were removed')
-        })
+    if(Boolean(deleteManyItems)) {
+        await Item.remove({'completed':true, "userName": user})
+    } else if(!Boolean(deleteManyItems)){
+        await Item.remove({'id':id})
     }
 
     ctx.response.body = ctx.request.body
@@ -100,37 +94,44 @@ router.put("/items", async (ctx) => {
 router.post("/user", async (ctx) => {
     let reqBody = JSON.parse(ctx.request.body)
 
-    await User.find({name: reqBody.name}, function(err, users) {
-        if(users.length == 0) {
-            let user = new User({
-                id: reqBody.id,
-                name: reqBody.name,
-                password: reqBody.password
-            })
-        
-            user.save()
+    const users = await User.find({name: reqBody.name})
 
-            reqBody.items = []
-            reqBody.logged = true
-
-            ctx.response.body = reqBody
-        } else {
-            reqBody.logged = true
+    if(users.length == 0) {
+        let user = new User({
+            id: reqBody.id,
+            name: reqBody.name,
+            password: reqBody.password
+        })
     
-            ctx.redirect('/list/:name?name=' + reqBody.name)
-        }
-    })
+        user.save()
+
+        reqBody.items = []
+        reqBody.logged = true
+
+        ctx.response.body = reqBody
+    } else {
+        const resBody = {}
+        const items = await Item.find({userName: reqBody.name})
+        
+        resBody.items = items
+        resBody.logged = true
+        resBody.name = reqBody.name
+
+        ctx.response.body = resBody
+    }
 })
 
 app.use(router.routes())
 app.use(router.allowedMethods())
+
 app.use(async (ctx) => {
     if(ctx.status === 404) {
-        console.log('404')
+        // console.log(ctx.query)
         ctx.redirect('/')
         await send(ctx, './build/index.html')
     }
 })
+
 app.listen(3000, function() {
     console.log(__dirname)
 })

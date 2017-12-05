@@ -5,7 +5,7 @@ import { showModal, confirmModal } from '../actions/actions';
 
 class Modal extends Component {
     render() {
-        const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems, itemIdToBeDeleted } = this.props
+        const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems, itemIdToBeDeleted, user } = this.props
         return isVisible ? (
             <div className='confirm-modal-wrap'>
                 <div 
@@ -27,7 +27,7 @@ class Modal extends Component {
                         </div>
                         <button 
                             className='confirm-but modal-but'
-                            onClick={() => {dispatch(confirmModal(itemIdToBeDeleted, deleteManyItems))}}
+                            onClick={() => {dispatch(confirmModal(itemIdToBeDeleted, deleteManyItems, user))}}
                         >
                             Yes
                         </button>
@@ -50,7 +50,8 @@ export default connect(
         itemsForeRemovingLength: state.store.items.filter((item) => (item.completed === true)).length,
         isVisible: state.store.modal,
         deleteManyItems: state.store.deleteManyItems,
-        itemIdToBeDeleted: state.store.itemIdToBeDeleted
+        itemIdToBeDeleted: state.store.itemIdToBeDeleted,
+        user: state.store.user
     })
 )(Modal);
 ``
