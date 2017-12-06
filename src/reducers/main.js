@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { createBrowserHistory } from 'history'
 import {
     ADD_ITEM,
     SET_FILTER,
@@ -12,7 +11,9 @@ import {
     GET_ALL_ITEMS,
     SUBMIT_FORM,
     GET_ITEMS_FOR_USER,
-    LOGOUT
+    LOGOUT,
+    REGISTRATION,
+    REGISTRATION_ERR
 } from '../actions/actions'
 
 const initialState = {
@@ -28,6 +29,16 @@ const initialState = {
 
 function store(state = initialState, action) {
     switch(action.type) {
+
+        case REGISTRATION_ERR:
+            return Object.assign({}, state, {
+                user: ''
+            })
+
+        case REGISTRATION:
+            return Object.assign({}, state, {
+                user: action.body.nickname
+            })
 
         case LOGOUT:
             return Object.assign({}, state, {
@@ -142,8 +153,4 @@ function store(state = initialState, action) {
     }
 }
 
-export const history = createBrowserHistory({ basename : '/', forceRefresh: true })
-
-export default combineReducers({
-    store
-})
+export default store

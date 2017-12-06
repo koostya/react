@@ -121,13 +121,43 @@ router.post("/user", async (ctx) => {
     }
 })
 
+router.post("/users", async (ctx) => {
+    let reqBody = JSON.parse(ctx.request.body)
+    console.log(reqBody.nickname)
+
+    const users = await User.find({nickname: reqBody.nickname})
+
+    if(users.length === 0) {
+        let user = new User({
+            id: reqBody.id,
+            nickname: reqBody.nickname,
+            name: reqBody.name,
+            surname: reqBody.surname,
+            phone: reqBody.phone,
+            password: reqBody.password
+        })
+    
+        user.save()
+
+        reqBody.items = []
+        reqBody.userAlreadyExist = false
+        reqBody.logged = true
+
+        ctx.response.body = reqBody
+    } else {
+        reqBody.userAlreadyExist = true   
+
+        ctx.response.body = reqBody
+    }
+})
+
 app.use(router.routes())
 app.use(router.allowedMethods())
 
 app.use(async (ctx) => {
     if(ctx.status === 404) {
         // console.log(ctx.query)
-        ctx.redirect('/')
+        // ctx.redirect('/')
         await send(ctx, './build/index.html')
     }
 })

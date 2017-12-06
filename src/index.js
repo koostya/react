@@ -1,31 +1,36 @@
-import React from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import thunk from 'redux-thunk'
 
 import { BrowserRouter as Router } from 'react-router-dom'
-import { routerMiddleware } from 'react-router-redux'
+import { routerMiddleware, routerReducer, push, ConnectedRouter } from 'react-router-redux'
+import createHistory from 'history/createBrowserHistory'
+import Routes from './router/index'
 
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import reducer, { history } from './reducers/main'
+import reducer from './reducers/main'
 import { routes } from './router/index'
 
+export const history = createHistory()
+
+const middleware = routerMiddleware(history)
+
 const store = createStore(
-  reducer,
+  combineReducers({
+    store: reducer,
+    router: routerReducer
+  }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  applyMiddleware(thunk)
+  applyMiddleware(middleware, thunk)
 )
 
-export const Application = () => {ReactDOM.render(
+ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      { routes }
-    </Router>
+    <ConnectedRouter history={history}>
+      <Routes />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
-)}
-
-store.subscribe(Application)
-
-Application()
+)

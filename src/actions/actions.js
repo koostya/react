@@ -1,5 +1,5 @@
 import { send } from '../utils/fetch'
-import { history } from '../reducers/main'
+import { history } from '../index'
 
 export const ADD_ITEM = 'ADD_ITEM';
 export const SET_FILTER = 'SET_FILTER';
@@ -13,6 +13,8 @@ export const GET_ALL_ITEMS = 'GET_ALL_ITEMS';
 export const SUBMIT_FORM = 'SUBMIT_FORM';
 export const GET_ITEMS_FOR_USER = 'GET_ITEMS_FOR_USER';
 export const LOGOUT = 'LOGOUT';
+export const REGISTRATION = 'REGISTRATION';
+export const REGISTRATION_ERR = 'REGISTRATION_ERR';
 
 export const Filters = {
     ALL: 'ALL',
@@ -44,6 +46,46 @@ export function submitForm(id, name, password) {
                 type: SUBMIT_FORM,
                 body: json
             })
+        })
+    }
+}
+
+export function submitFormRegis(id, nickname, name, surname, phone, password) { 
+    return (dispatch) => {
+        fetch('/users', {
+            method: 'POST',
+            header: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                nickname: nickname,
+                name: name,
+                surname: surname,
+                phone: phone,
+                password: password
+            })
+        }).then((res) => {
+            return res.json()
+        }).then((json) => {
+            if(json.userAlreadyExist == true) {
+                history.push('/registration') 
+                
+                dispatch({
+                    type: REGISTRATION_ERR,
+                    body: json
+                })
+            } else {
+                localStorage.setItem('user', json.nickname)
+                localStorage.setItem('login', true)
+    
+                history.push('/list')   
+    
+                dispatch({
+                    type: REGISTRATION,
+                    body: json
+                })
+            }
         })
     }
 }

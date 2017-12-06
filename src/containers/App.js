@@ -8,13 +8,17 @@ import DeleteModal from '../components/Modal';
 
 import { getItemsForUser, logout } from '../actions/actions';
 
-export class App extends Component {
+class App extends Component {
+    constructor(props) {
+        super(props)
+    }
 
     componentDidMount() {
         this.props.dispatch(getItemsForUser(this.props.user))
     }
 
     filterItems = value => {
+        console.log()
         let items = this.props.items,
             loadCompleted;
         
@@ -82,12 +86,15 @@ export class App extends Component {
     }
 }
 
-export default connect(
-    state => ({
+const mapStateToProps = (state) => {
+    return {
         filter: state.store.filter,
         items: state.store.items,
         modal: state.store.modal,
-        data: state.store,
         user: localStorage.getItem('user')
-    })
-)(App);
+    }
+}
+
+export default connect(
+    mapStateToProps
+)(App)
