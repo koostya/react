@@ -91,9 +91,9 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        filter: state.store.filter,
-        items: state.store.items,
-        modal: state.store.modal,
+        filter: state.filter.filter,
+        items: state.item.items,
+        modal: state.modal.modal,
         user: localStorage.getItem('user')
     }
 }

@@ -150,7 +150,6 @@ app.use(router.allowedMethods())
 
 app.use(async (ctx) => {
     if(ctx.status === 404) {
-        // console.log(ctx.query)
         ctx.redirect('/')
         await send(ctx, './build/index.html')
     }

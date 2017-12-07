@@ -73,8 +73,8 @@ class Form extends Component {
 
 export const form = connect(
     state => ({
-        noUserWasFound: state.store.noUserWasFound,
-        user: state.store.name,
-        password: state.store.password
+        noUserWasFound: state.login.noUserWasFound,
+        user: state.login.name,
+        password: state.login.password
     })
 )(Form);

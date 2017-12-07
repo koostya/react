@@ -68,8 +68,8 @@ class Input extends Component {
 
 export default connect(
     state => ({
-        items: state.store.items,
-        chooseAllChecked: state.store.chooseAllChecked,
+        items: state.item.items,
+        chooseAllChecked: state.menu.chooseAllChecked,
         user: localStorage.getItem('user')
     })
 )(Input);

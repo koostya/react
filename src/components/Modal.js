@@ -46,12 +46,12 @@ class Modal extends Component {
 
 export default connect(
     state => ({
-        items: state.store.items,
-        itemsForeRemovingLength: state.store.items.filter((item) => (item.completed === true)).length,
-        isVisible: state.store.modal,
-        deleteManyItems: state.store.deleteManyItems,
-        itemIdToBeDeleted: state.store.itemIdToBeDeleted,
-        user: state.store.user
+        items: state.item.items,
+        itemsForeRemovingLength: state.item.items.filter((item) => (item.completed === true)).length,
+        isVisible: state.modal.modal,
+        deleteManyItems: state.modal.deleteManyItems,
+        itemIdToBeDeleted: state.modal.itemIdToBeDeleted,
+        user: state.modal.user
     })
 )(Modal);
 ``

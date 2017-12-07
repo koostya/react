@@ -114,10 +114,10 @@ class RegistrationForm extends Component {
 export const form = connect(
     state => ({
         user: localStorage.getItem('user'),
-        name: state.store.name,
-        surname: state.store.surname,
-        password: state.store.password,
-        phone: state.store.phone,
-        userAlreadyExist: state.store.userAlreadyExist
+        name: state.registration.name,
+        surname: state.registration.surname,
+        password: state.registration.password,
+        phone: state.registration.phone,
+        userAlreadyExist: state.registration.userAlreadyExist
     })
 )(RegistrationForm);

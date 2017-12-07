@@ -10,7 +10,7 @@ import Routes from './router/index'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import reducer from './reducers/main'
+import { reducer } from './reducers/main'
 import { routes } from './router/index'
 
 export const history = createHistory()
@@ -18,10 +18,7 @@ export const history = createHistory()
 const middleware = routerMiddleware(history)
 
 const store = createStore(
-  combineReducers({
-    store: reducer,
-    router: routerReducer
-  }),
+  reducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   applyMiddleware(middleware, thunk)
 )

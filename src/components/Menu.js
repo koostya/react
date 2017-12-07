@@ -53,7 +53,8 @@ class Menu extends Component {
 
 export default connect(
     state => ({
-        items: state.store.items,
-        filter: state.store.filter
+        items: state.item.items,
+        filter: state.filter.filter,
+        deleteManyItems: state.modal.deleteManyItems
     })
 )(Menu);
