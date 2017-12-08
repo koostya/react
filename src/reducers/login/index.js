@@ -1,7 +1,7 @@
 import {
     SUBMIT_FORM_ERR,
     SUBMIT_FORM
-} from '../../actions/actions'
+} from '../../actions/CONSTS'
 
 const initialState = {
     user: '',

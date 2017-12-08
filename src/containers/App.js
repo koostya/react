@@ -6,7 +6,8 @@ import List from '../components/List';
 import Menu from '../components/Menu';
 import DeleteModal from '../components/Modal';
 
-import { getItemsForUser, logout } from '../actions/actions';
+import { getItemsForUser } from '../actions/Item';
+import { logout } from '../actions/Logout';
 
 class App extends Component {
     constructor(props) {

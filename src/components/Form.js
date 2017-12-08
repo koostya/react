@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { submitForm } from '../actions/actions';
+import { submitForm } from '../actions/LoginForm';
 
 class Form extends Component {
     constructor(props) {

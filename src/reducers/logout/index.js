@@ -1,6 +1,6 @@
 import {
     LOGOUT
-} from '../../actions/actions'
+} from '../../actions/CONSTS'
 
 const initialState = {
     user: '',

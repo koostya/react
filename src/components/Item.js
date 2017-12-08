@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { changeCompleted, changeEditing, updateItem, showModal } from '../actions/actions';
+import { changeCompleted, changeEditing, updateItem } from '../actions/Item';
+import { showModal } from '../actions/Modal';
 
 class Item extends Component {
     constructor(props) {

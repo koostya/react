@@ -1,7 +1,7 @@
 import {
     REGISTRATION,
     REGISTRATION_ERR
-} from '../../actions/actions'
+} from '../../actions/CONSTS'
 
 const initialState = {
     user: '',

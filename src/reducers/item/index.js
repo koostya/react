@@ -4,16 +4,39 @@ import {
     ADD_ITEM,
     UPDATE_ITEM,
     CHANGE_COMPLETED,
-    CHANGE_EDITING
-} from '../../actions/actions'
+    CHANGE_EDITING,
+    SET_ALL_ITEMS_CHECKED,
+    REMOVE_ITEMS_ON_CONFIRM_MODAL
+} from '../../actions/CONSTS'
 
 const initialState = {
     items: [],
-    user: ''
+    user: '',
+    chooseAllChecked: false
 }
 
 export default function item(state = initialState, action) {
     switch(action.type) {
+
+        case REMOVE_ITEMS_ON_CONFIRM_MODAL:
+            return Object.assign({}, state, {
+                items: action.body.itemIdToBeDeleted !== null ?
+                state.items.filter((item) => (item.id !== state.itemIdToBeDeleted)) :
+                state.items.filter((item) => (item.completed !== true))
+            })
+
+        case SET_ALL_ITEMS_CHECKED:
+            return Object.assign({}, state, {
+                items: state.items.map((item) => {
+                    if (item.completed !== action.body.allChecked) {
+                        return Object.assign({}, item, {
+                            completed: action.body.allChecked
+                        })
+                    }
+                    return item
+                }),
+                chooseAllChecked: action.body.allChecked,
+            })
 
         case GET_ALL_ITEMS:
             return Object.assign({}, state, {

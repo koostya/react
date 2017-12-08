@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setFilter, showModal } from '../actions/actions';
+import { setFilter } from '../actions/Filter';
+import { showModal } from '../actions/Modal';
 
 class Menu extends Component {
 
@@ -54,7 +55,6 @@ class Menu extends Component {
 export default connect(
     state => ({
         items: state.item.items,
-        filter: state.filter.filter,
-        deleteManyItems: state.modal.deleteManyItems
+        filter: state.filter.filter
     })
 )(Menu);

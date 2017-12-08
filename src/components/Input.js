@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { addItem, setAllChecked } from '../actions/actions';
+import { addItem, setAllChecked, setAllItemsChecked } from '../actions/Item';
 
 class Input extends Component {
     constructor(props) {
@@ -53,7 +53,7 @@ class Input extends Component {
                         <input 
                             type="checkbox" 
                             id="choose_all" 
-                            onChange={(e) => {dispatch(setAllChecked(e.target.checked))}}
+                            onChange={(e) => {console.log(e.target.checked); dispatch(setAllItemsChecked(e.target.checked))}}
                             checked={chooseAllChecked ? 'checked' : ''}
                         />
                         <label htmlFor="choose_all"></label>
@@ -69,7 +69,7 @@ class Input extends Component {
 export default connect(
     state => ({
         items: state.item.items,
-        chooseAllChecked: state.menu.chooseAllChecked,
+        chooseAllChecked: state.item.chooseAllChecked,
         user: localStorage.getItem('user')
     })
 )(Input);

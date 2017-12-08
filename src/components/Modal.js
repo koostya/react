@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { showModal, confirmModal } from '../actions/actions';
+import { showModal, confirmModal } from '../actions/Modal';
+import { removeItemsOnConfirmModal } from '../actions/Item';
 
 class Modal extends Component {
     render() {
@@ -27,7 +28,7 @@ class Modal extends Component {
                         </div>
                         <button 
                             className='confirm-but modal-but'
-                            onClick={() => {dispatch(confirmModal(itemIdToBeDeleted, deleteManyItems, user))}}
+                            onClick={() => {dispatch(removeItemsOnConfirmModal(itemIdToBeDeleted, deleteManyItems, user))}}
                         >
                             Yes
                         </button>
@@ -51,7 +52,7 @@ export default connect(
         isVisible: state.modal.modal,
         deleteManyItems: state.modal.deleteManyItems,
         itemIdToBeDeleted: state.modal.itemIdToBeDeleted,
-        user: state.modal.user
+        user: localStorage.getItem('user')
     })
 )(Modal);
 ``
