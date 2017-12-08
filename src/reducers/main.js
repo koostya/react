@@ -6,6 +6,7 @@ import item from './item/index'
 import logout from './logout/index'
 import filter from './filter/index'
 import { routerReducer } from 'react-router-redux'
+import { reducer as reduxFormReducer } from 'redux-form';
 
 export const reducer = combineReducers({
     registration,
@@ -14,5 +15,6 @@ export const reducer = combineReducers({
     item,
     logout,
     filter,
-    router: routerReducer
+    router: routerReducer,
+    form: reduxFormReducer
 })

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { submitForm } from '../actions/LoginForm';
+import LoginForm from "./Forms/LoginForm/index";
 
 class Form extends Component {
     constructor(props) {
@@ -45,7 +46,7 @@ class Form extends Component {
         const { noUserWasFound } = this.props
         return(
             <div className="login_form">
-                <input 
+                {/* <input 
                     className="name_input"
                     onChange={(e) => {this.handlerName(e)}}
                     value={this.state.name}
@@ -65,7 +66,8 @@ class Form extends Component {
                     onClick={() => (this.formSubmitting(this.state.name))}
                 >
                 Log in
-                </div>
+                </div> */}
+                <LoginForm onSubmit={() => console.log('login')} />
             </div>
         );
     }

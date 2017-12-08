@@ -18,22 +18,6 @@ class App extends Component {
         this.props.dispatch(getItemsForUser(this.props.user))
     }
 
-    filterItems = value => {
-        console.log()
-        let items = this.props.items,
-            loadCompleted;
-        
-        value === 'COMPLETED' ? loadCompleted = true : value === 'ACTIVE' ? loadCompleted = false : loadCompleted = 'all'
-
-        return items.filter((item, i, arr) => {
-            if(item.completed === loadCompleted) {
-                return item
-            } else if(loadCompleted === 'all'){
-                return item
-            }
-        })
-    }
-
     checkHowManyItemsLeft = () => {
         let countLeftItems = 0;
 
@@ -59,7 +43,7 @@ class App extends Component {
     }
     
     render() {
-        const { filter, items, modal, data, dispatch } = this.props;
+        const { filter, items, modal, data, dispatch, filteredItems } = this.props;
         return (
             <div className="mvc_wrap">
                 <div className="hello_message">
@@ -70,7 +54,7 @@ class App extends Component {
                         chooseAllCheck={this.chooseAllCheck}
                     />
                     <List
-                        items={this.filterItems(filter)}
+                        items={filteredItems()}
                         chooseAllCheck={this.chooseAllCheck}
                     />
                     {items.length > 0 ?
@@ -95,7 +79,21 @@ const mapStateToProps = (state) => {
         filter: state.filter.filter,
         items: state.item.items,
         modal: state.modal.modal,
-        user: localStorage.getItem('user')
+        user: localStorage.getItem('user'),
+        filteredItems: () => {
+            let items = state.item.items,
+            loadCompleted;
+        
+            state.filter.filter === 'COMPLETED' ? loadCompleted = true : state.filter.filter === 'ACTIVE' ? loadCompleted = false : loadCompleted = 'all'
+
+            return items.filter((item, i, arr) => {
+                if(item.completed === loadCompleted) {
+                    return item
+                } else if(loadCompleted === 'all'){
+                    return item
+                }
+            })
+        }
     }
 }
 
