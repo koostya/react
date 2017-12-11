@@ -395,6 +395,12 @@ li {
     color: white;
     cursor: pointer;
     transition: all .3s;
+    border: none;
+    outline: none;
+}
+
+.form_button:active {
+    outline: none;
 }
 
 .form_button:hover {
@@ -479,6 +485,40 @@ li {
     position: fixed;
     top: 50px;
     right: 50px;
+}
+
+.input_wrap {
+    position: relative;
+}
+
+.input_wrap span {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #BF3030;
+    font-size: 13px;
+}
+
+.input_wrap .ajax-loader {
+    display: none;
+    width: 30px;
+    height: 30px;
+    background-image: url('../images/ajax-loader-32*32.gif');
+}
+
+.ajax-loader:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.async-validating .ajax-loader {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }
 
 

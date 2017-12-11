@@ -53,4 +53,35 @@ exports.userApi = function (router) {
             ctx.response.body = reqBody
         }
     })
+
+    router.post("/users/nickname", async (ctx) => {
+        let reqBody = JSON.parse(ctx.request.body)
+        let users = await User.find({nickname: reqBody.nickname})
+        
+        if(users.length == 0) {
+            reqBody.userWithSuchNickIsNotDefined = true
+            ctx.response.body = reqBody
+        } else if(users.length == 1 && users[0].password == reqBody.password) {
+            reqBody.userWithSuchNickIsNotDefined = false
+            reqBody.userWithSuchPasswordIsNotDefined = false
+            ctx.response.body = reqBody
+        } else if(users.length == 1 && users[0].password !== reqBody.password) {
+            reqBody.userWithSuchNickIsNotDefined = false
+            reqBody.userWithSuchPasswordIsNotDefined = true
+            ctx.response.body = reqBody
+        }
+    })
+
+    router.post("/users/new", async (ctx) => {
+        let reqBody = JSON.parse(ctx.request.body)
+        let users = await User.find({nickname: reqBody.nickname})
+        
+        if(users.length == 0) {
+            reqBody.userWithSuchNickIsDefined = false
+            ctx.response.body = reqBody
+        } else if(users.length == 1) {
+            reqBody.userWithSuchNickIsDefined = true
+            ctx.response.body = reqBody
+        }
+    })
 }
