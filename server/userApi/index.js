@@ -1,11 +1,17 @@
 exports.userApi = function (router) {
     const User = require('../models/User')
     const Item = require('../models/Item')
+
+    router.get("/users", async (ctx) => {
+        let users = await User.find({})
+
+        ctx.response.body = users
+    })
     
     router.post("/user", async (ctx) => {
         let reqBody = JSON.parse(ctx.request.body)
     
-        const users = await User.find({nickname: reqBody.name, password: reqBody.password})
+        const users = await User.find({nickname: reqBody.nickname, password: reqBody.password})
     
         if(users.length == 0) {
             reqBody.noUserWasFound = true
@@ -13,12 +19,12 @@ exports.userApi = function (router) {
             ctx.response.body = reqBody
         } else {
             const resBody = {}
-            const items = await Item.find({userName: reqBody.name})
+            const items = await Item.find({userName: reqBody.nickname})
     
             resBody.noUserWasFound = false
             resBody.items = items
             resBody.logged = true
-            resBody.name = reqBody.name
+            resBody.nickname = reqBody.nickname
     
             ctx.response.body = resBody
         }

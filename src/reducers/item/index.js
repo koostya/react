@@ -6,17 +6,24 @@ import {
     CHANGE_COMPLETED,
     CHANGE_EDITING,
     SET_ALL_ITEMS_CHECKED,
-    REMOVE_ITEMS_ON_CONFIRM_MODAL
+    REMOVE_ITEMS_ON_CONFIRM_MODAL,
+    SET_LIST_OF_USERS
 } from '../../actions/CONSTS'
 
 const initialState = {
     items: [],
     user: '',
-    chooseAllChecked: false
+    chooseAllChecked: false,
+    users: []
 }
 
 export default function item(state = initialState, action) {
     switch(action.type) {
+
+        case SET_LIST_OF_USERS:
+            return Object.assign({}, state, {
+                users: action.payload.users
+            })
 
         case REMOVE_ITEMS_ON_CONFIRM_MODAL:
             return Object.assign({}, state, {

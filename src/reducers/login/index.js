@@ -20,10 +20,10 @@ export default function login(state = initialState, action) {
 
         case SUBMIT_FORM:
             return Object.assign({}, state, {
-                items: action.body.items,
-                logged: action.body.logged,
-                user: action.body.name,
-                noUserWasFound: action.body.noUserWasFound
+                items: action.payload.body.items,
+                logged: action.payload.body.logged,
+                user: action.payload.body.name,
+                noUserWasFound: action.payload.body.noUserWasFound
             })
             
         default:
