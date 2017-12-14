@@ -1,7 +1,7 @@
 import {
     REGISTRATION,
     REGISTRATION_ERR
-} from '../../actions/CONSTS'
+} from '../../CONSTS/CONSTS'
 
 const initialState = {
     user: '',
@@ -22,8 +22,8 @@ export default function registration(state = initialState, action) {
 
         case REGISTRATION:
             return Object.assign({}, state, {
-                user: action.body.nickname,
-                userAlreadyExist: action.body.userAlreadyExist
+                user: action.payload.body.nickname,
+                userAlreadyExist: action.payload.body.userAlreadyExist
             })
             
         default:

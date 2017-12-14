@@ -1,5 +1,3 @@
-import { send } from '../../../../utils/fetch'
-
 const asyncValidate = (values, dispatch, props, field) => {
     return fetch('http://localhost:3001/users/nickname', {
             method: 'POST',

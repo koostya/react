@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { changeCompleted, changeEditing, updateItem } from '../actions/Item';
-import { showModal } from '../actions/Modal';
-
 class Item extends Component {
     constructor(props) {
         super(props);
@@ -15,8 +12,16 @@ class Item extends Component {
 
     editInput = (e) => {
         if(e.key === 'Enter' || e.key === 'Esc') {
-            this.props.dispatch(updateItem(this.props.id, this.props.completed, this.state.text));
-            this.props.dispatch(changeEditing(this.props.id));
+
+            this.props.dispatch({type: 'UPDATE_ITEM_W', data: {
+                id: this.props.id,
+                completed: this.props.completed,
+                text: this.state.text
+            }})
+
+            this.props.dispatch({type: 'CHANGE_EDITING_W', data: {
+                id: this.props.id
+            }})
         }
     }
 
@@ -33,13 +38,22 @@ class Item extends Component {
             <li>
                 <div 
                     className={this.props.completed ? 'item completed' : 'item'} 
-                    onDoubleClick={() => (this.props.dispatch(changeEditing(this.props.id)))}
+                    onDoubleClick={() => (this.props.dispatch({
+                        type: 'CHANGE_EDITING_W', 
+                        data: {
+                            id: this.props.id
+                        }
+                    }))}
                 >
                     <div className="checkbox">
                         <input 
                             type="checkbox"
                             id={this.props.id}
-                            onChange={(e) => {dispatch(changeCompleted(this.props.id, e.target.checked, this.props.text))}}
+                            onChange={(e) => {dispatch({type: 'CHANGE_COMPLETED_W', data: {
+                                id: this.props.id,
+                                completed: e.target.checked,
+                                text: this.props.text
+                            }})}}
                             checked={this.props.completed ? 'checked' : ''} 
                         />
                         <label htmlFor={this.props.id}></label>
@@ -49,13 +63,36 @@ class Item extends Component {
                     </div>
                     <div 
                         className="remove" 
-                        onClick={() => (dispatch(showModal(deleteManyItems, id)))}
+                        onClick={() => (
+                            dispatch({
+                                type: 'SHOW_MODAL_W',
+                                data: {
+                                    deleteManyItems: deleteManyItems,
+                                    itemIdToBeDeleted: id
+                                }
+                            })
+                        )}
                     ></div>
                     {this.props.editing ?
                         <input 
                             type="text" 
                             className="updateInput" 
-                            onBlur={(e) => {dispatch(updateItem(this.props.id, this.props.completed, e.target.value)); dispatch(changeEditing(this.props.id))}} 
+                            onBlur={(e) => {
+                                dispatch({
+                                    type: 'UPDATE_ITEM_W', 
+                                    data: {
+                                        id: this.props.id,
+                                        completed: this.props.completed,
+                                        text: this.state.text
+                                    }
+                                }); 
+                                dispatch({
+                                    type: 'CHANGE_EDITING_W', 
+                                    data: {
+                                        id: this.props.id
+                                    }
+                                })
+                            }} 
                             onChange={(e) => (this.editInputHandler(e))} 
                             onKeyPress={this.editInput} 
                             value={text} 

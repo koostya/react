@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { showModal, confirmModal } from '../actions/Modal';
-import { removeItemsOnConfirmModal } from '../actions/Item';
-
 class Modal extends Component {
     render() {
         const { dispatch, itemsForeRemovingLength, isVisible, deleteManyItems, itemIdToBeDeleted, user } = this.props
@@ -14,7 +11,15 @@ class Modal extends Component {
                 >
                     <div 
                         className='close-modal-bg'
-                        onClick={() => {dispatch(showModal())}}
+                        onClick={() => {
+                            dispatch({
+                                type: 'SHOW_MODAL_W',
+                                data: {
+                                    deleteManyItems: null,
+                                    itemIdToBeDeleted: null
+                                }
+                            })
+                        }}
                     >
                     </div>
                     <div className='confirm-modal-inner'>
@@ -28,13 +33,30 @@ class Modal extends Component {
                         </div>
                         <button 
                             className='confirm-but modal-but'
-                            onClick={() => {dispatch(removeItemsOnConfirmModal(itemIdToBeDeleted, deleteManyItems, user))}}
+                            onClick={() => {
+                                dispatch({
+                                    type: 'REMOVE_ITEMS_ON_CONFIRM_MODAL_W',
+                                    data: {
+                                        itemIdToBeDeleted: itemIdToBeDeleted,
+                                        deleteManyItems: deleteManyItems,
+                                        user: user
+                                    }
+                                })
+                            }}
                         >
                             Yes
                         </button>
                         <button 
                             className='cancel-but modal-but'
-                            onClick={() => {dispatch(showModal())}}
+                            onClick={() => {
+                                dispatch({
+                                    type: 'SHOW_MODAL_W',
+                                    data: {
+                                        deleteManyItems: deleteManyItems,
+                                        itemIdToBeDeleted: null
+                                    }
+                                })
+                            }}
                         >
                             No
                         </button>
@@ -55,4 +77,3 @@ export default connect(
         user: localStorage.getItem('user')
     })
 )(Modal);
-``

@@ -6,7 +6,7 @@ import renderField from './fieldSheme/Field'
 import renderError from './error/index'
   
 const RegisForm = (props) => {
-    const { handleSubmit, submitting, pristine, error } = props
+    const { handleSubmit, submitting } = props
     return (
       <form onSubmit={handleSubmit}>
         <div className="errors">

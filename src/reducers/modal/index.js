@@ -1,7 +1,7 @@
 import {
     SHOW_MODAL,
     CONFIRM_MODAL
-} from '../../actions/CONSTS'
+} from '../../CONSTS/CONSTS'
 
 const initialState = {
     deleteManyItems: false,
@@ -15,8 +15,8 @@ export default function modal(state = initialState, action) {
         case SHOW_MODAL:
             return Object.assign({}, state, {
                 modal: !state.modal,
-                deleteManyItems: action.deleteManyItems,
-                itemIdToBeDeleted: action.itemIdToBeDeleted
+                deleteManyItems: action.payload.body.deleteManyItems,
+                itemIdToBeDeleted: action.payload.body.itemIdToBeDeleted
             })
 
         case CONFIRM_MODAL:

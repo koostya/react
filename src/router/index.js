@@ -6,12 +6,9 @@ import App from '../containers/App'
 
 import { isUserAuthorized } from './utils/isUserAuthorized'
 
-import { Router, Route, Redirect, Switch, withRouter } from 'react-router-dom'
+import { Route, Redirect, Switch } from 'react-router-dom'
 
 class Routes extends Component {
-    constructor() {
-        super()
-    }
     render() {
         return(
             <Route path="/" render={() =>

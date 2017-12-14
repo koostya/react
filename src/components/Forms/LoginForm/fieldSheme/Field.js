@@ -1,5 +1,4 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
 
 const renderField = ({ input, placeholder, className, type, meta: { asyncValidating, touched, error, warning } }) => (
     <div className={asyncValidating ? 'input_wrap async-validating' : 'input_wrap'}>

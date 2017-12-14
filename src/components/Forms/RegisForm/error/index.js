@@ -1,5 +1,4 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
 
 const renderError = ({input, meta, ...props}) => (
     <div className="error">

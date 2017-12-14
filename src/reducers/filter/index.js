@@ -1,6 +1,6 @@
 import {
     SET_FILTER
-} from '../../actions/CONSTS'
+} from '../../CONSTS/CONSTS'
 
 const initialState = {
     filter: 'ALL'

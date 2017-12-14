@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch'
 
-export function getUsers() {
-    return fetch('http://localhost:3001/users', {
-        method: 'GET',
+export function appLoadAPI(name) {
+    return fetch('http://localhost:3001/list/user/:name?name=' + name, {
+        method: "GET",
         header: {
             'Content-Type': 'application/json'
         },

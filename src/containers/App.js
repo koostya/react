@@ -6,16 +6,12 @@ import List from '../components/List';
 import Menu from '../components/Menu';
 import DeleteModal from '../components/Modal';
 
-import { getItemsForUser } from '../actions/Item';
-import { logout } from '../actions/Logout';
-
 class App extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     componentDidMount() {
-        this.props.dispatch(getItemsForUser(this.props.user))
+        this.props.dispatch({type: 'GET_ITEMS_FOR_USER_W', data: {
+            name: this.props.user
+        }})
     }
 
     checkHowManyItemsLeft = () => {
@@ -43,7 +39,7 @@ class App extends Component {
     }
     
     render() {
-        const { filter, items, modal, data, dispatch, filteredItems } = this.props;
+        const { items, modal, dispatch, filteredItems } = this.props;
         return (
             <div className="mvc_wrap">
                 <div className="hello_message">
@@ -67,7 +63,7 @@ class App extends Component {
                     {modal &&
                         <DeleteModal />
                     }
-                    <div className="logout_button" onClick={() => (dispatch(logout()))}></div>
+                    <div className="logout_button" onClick={() => (dispatch({type: 'LOGOUT_W'}))}></div>
                 </div>
             </div>
         );
@@ -76,7 +72,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        filter: state.filter.filter,
         items: state.item.items,
         modal: state.modal.modal,
         user: localStorage.getItem('user'),

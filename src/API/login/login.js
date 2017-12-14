@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import { history } from '../index'
+import { history } from '../../index'
 
 export function loginAPI(id, nickname, password) {
     return fetch('http://localhost:3001/user', {
@@ -18,10 +18,8 @@ export function loginAPI(id, nickname, password) {
         if(json.noUserWasFound) {
             return
         } else {
-            // console.log(json)
             localStorage.setItem('user', json.nickname)
             localStorage.setItem('login', true)
-            console.log(json)
             
             history.push('/list')  
 

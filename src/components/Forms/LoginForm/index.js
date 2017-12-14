@@ -5,7 +5,7 @@ import asyncValidate from './server/Validate'
 import renderField from './fieldSheme/Field'
   
 const SyncValidationForm = (props) => {
-    const { handleSubmit, submitting, pristine, error } = props
+    const { handleSubmit, submitting } = props
     return (
       <form onSubmit={handleSubmit}>
         <Field name="nickname" type="text" component={renderField} placeholder="nickname" className='name_input' />

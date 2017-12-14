@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { addItem, setAllChecked, setAllItemsChecked } from '../actions/Item';
-
 class Input extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +18,13 @@ class Input extends Component {
 
     inputEnter = (e) => {
         if(e.key === 'Enter') {
-            this.props.dispatch(addItem(this.generateID(), e.target.value, false, false, this.props.user));
+            this.props.dispatch({type: 'ADD_ITEM_W', data: {
+                id: this.generateID(),
+                text: e.target.value,
+                completed: false,
+                editing: false,
+                userName: this.props.user
+            }})
 
             this.setState({
                 text: ''
@@ -53,7 +57,7 @@ class Input extends Component {
                         <input 
                             type="checkbox" 
                             id="choose_all" 
-                            onChange={(e) => {console.log(e.target.checked); dispatch(setAllItemsChecked(e.target.checked))}}
+                            onChange={(e) => {dispatch({type: 'SET_ALL_ITEMS_CHECKED_W', data: {allChecked: e.target.checked}})}}
                             checked={chooseAllChecked ? 'checked' : ''}
                         />
                         <label htmlFor="choose_all"></label>

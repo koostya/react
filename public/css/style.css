@@ -389,13 +389,14 @@ li {
 .form_button {
     width: 100%;
     border-radius: 20px;
-    background-color: #BF3030;
+    background-color: transparent;
+    border: 2px solid #FFA900;
     padding: 7px 0;
     text-align: center;
     color: white;
     cursor: pointer;
     transition: all .3s;
-    border: none;
+    color: rgb(0,0,0);
     outline: none;
 }
 
@@ -405,6 +406,7 @@ li {
 
 .form_button:hover {
     background-color: rgba(255, 64, 64, .8);
+    color: white;
 }
 
 .name_input,
@@ -417,7 +419,7 @@ li {
     color: #FF7373;
     margin-bottom: 10px;
     border-radius: 7px;
-    box-shadow: 0 0 10px -3px rgba(255, 64, 64, .8);
+    box-shadow: 0 0 10px -3px rgba(0,0,0, .8);
     text-align: center;
 }
 

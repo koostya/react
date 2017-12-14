@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import RegisForm from './Forms/RegisForm/index'
-import { submitFormRegis } from '../actions/RegisForm';
 
 class RegistrationForm extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     submit = (values) => {
-        this.props.dispatch(submitFormRegis(this.generateID(), values.nickname, values.name, values.surname, values.phone, values.password))
+        this.props.dispatch({type: 'REGISTRATION_W', data: {
+            id: this.generateID(),
+            nickname: values.nickname,
+            name: values.name,
+            surname: values.surname,
+            phone: values.phone,
+            password: values.password
+        }})
     }
 
     generateID = () =>  new Date().getTime()
 
 
     render() {
-        const { user, userAlreadyExist } = this.props
-
         return(
             <div className="registration_form">
                 <RegisForm onSubmit={this.submit} />
