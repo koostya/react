@@ -16,7 +16,6 @@ export function addItemAPI(id, text, completed, editing, userName) {
     }).then((res) => {
         return res.json()
     }).then((json) => {
-        // console.log(json)
         return json
     })
 }

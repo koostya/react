@@ -5,6 +5,7 @@ import Input from '../components/Input';
 import List from '../components/List';
 import Menu from '../components/Menu';
 import DeleteModal from '../components/Modal';
+import Loader from '../components/Loader'
 
 class App extends Component {
 
@@ -39,7 +40,7 @@ class App extends Component {
     }
     
     render() {
-        const { items, modal, dispatch, filteredItems } = this.props;
+        const { items, modal, dispatch, filteredItems, loader } = this.props;
         return (
             <div className="mvc_wrap">
                 <div className="hello_message">
@@ -64,6 +65,11 @@ class App extends Component {
                         <DeleteModal />
                     }
                     <div className="logout_button" onClick={() => (dispatch({type: 'LOGOUT_W'}))}></div>
+                    {loader ? 
+                        <Loader />
+                        :
+                        ''
+                    }
                 </div>
             </div>
         );
@@ -73,6 +79,7 @@ class App extends Component {
 const mapStateToProps = (state) => {
     return {
         items: state.item.items,
+        loader: state.loader.loader,
         modal: state.modal.modal,
         user: localStorage.getItem('user'),
         filteredItems: () => {

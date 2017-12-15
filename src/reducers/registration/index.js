@@ -1,7 +1,6 @@
 import {
-    REGISTRATION,
-    REGISTRATION_ERR
-} from '../../CONSTS/CONSTS'
+    REGISTRATION
+} from '../../consts/CONSTS'
 
 const initialState = {
     user: '',
@@ -11,7 +10,7 @@ const initialState = {
 export default function registration(state = initialState, action) {
     switch(action.type) {
 
-        case REGISTRATION_ERR:
+        case REGISTRATION.ERROR:
             return Object.assign({}, state, {
                 userAlreadyExist: action.body.userAlreadyExist,
                 user: action.body.nickname,
@@ -20,7 +19,7 @@ export default function registration(state = initialState, action) {
                 password: action.body.password
             })
 
-        case REGISTRATION:
+        case REGISTRATION.SUCCESS:
             return Object.assign({}, state, {
                 user: action.payload.body.nickname,
                 userAlreadyExist: action.payload.body.userAlreadyExist

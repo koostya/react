@@ -20,6 +20,5 @@ const SyncValidationForm = (props) => {
 export default reduxForm({
     form: 'LoginForm', 
     validate,
-    asyncValidate,
-    asyncBlurFields: ['nickname', 'password']
+    asyncValidate
   })(SyncValidationForm)

@@ -8,7 +8,7 @@ import {
     SET_ALL_ITEMS_CHECKED,
     REMOVE_ITEMS_ON_CONFIRM_MODAL,
     SET_LIST_OF_USERS
-} from '../../CONSTS/CONSTS'
+} from '../../consts/CONSTS'
 
 const initialState = {
     items: [],
@@ -25,14 +25,14 @@ export default function item(state = initialState, action) {
                 users: action.payload.users
             })
 
-        case REMOVE_ITEMS_ON_CONFIRM_MODAL:
+        case REMOVE_ITEMS_ON_CONFIRM_MODAL.SUCCESS:
             return Object.assign({}, state, {
                 items: action.itemIdToBeDeleted !== null ?
                 state.items.filter((item) => (item.id !== state.itemIdToBeDeleted)) :
                 state.items.filter((item) => (item.completed !== true))
             })
 
-        case SET_ALL_ITEMS_CHECKED:
+        case SET_ALL_ITEMS_CHECKED.SUCCESS:
             return Object.assign({}, state, {
                 items: state.items.map((item) => {
                     if (item.completed !== action.payload.body.allChecked) {
@@ -50,13 +50,13 @@ export default function item(state = initialState, action) {
                 items: action.body
             })
     
-        case GET_ITEMS_FOR_USER:
+        case GET_ITEMS_FOR_USER.SUCCESS:
             return Object.assign({}, state, {
                 items: action.payload.body.items,
                 user: action.payload.body.name
             })
 
-        case ADD_ITEM:
+        case ADD_ITEM.SUCCESS:
             return Object.assign({}, state, {
                 items: [
                     ...state.items,
@@ -71,7 +71,7 @@ export default function item(state = initialState, action) {
                 user: action.payload.body.userName
             })
 
-        case UPDATE_ITEM:
+        case UPDATE_ITEM.SUCCESS:
             return Object.assign({}, state, { 
                 items: state.items.map((item) => {
                     if (item.id === action.payload.body.id) {
@@ -83,7 +83,7 @@ export default function item(state = initialState, action) {
                 })
             })
 
-        case CHANGE_COMPLETED:
+        case CHANGE_COMPLETED.SUCCESS:
             return Object.assign({}, state, {
                 chooseAllChecked: action.payload.body.completed,
                 items: state.items.map((item) => {

@@ -12,6 +12,7 @@ import { showDeleteModalWatch } from './modal/showDeleteModal'
 import { setFilterWatch } from './filter/setFilter'
 import { removeItemsOnConfirmModalWatch } from './modal/removeItemsOnConfirmModal'
 import { logoutWatch } from './logout/logout'
+import { loaderWatch } from './loader/index'
 
 export default function* rootSaga() {
     yield all([
@@ -26,6 +27,7 @@ export default function* rootSaga() {
         showDeleteModalWatch(),
         setFilterWatch(),
         removeItemsOnConfirmModalWatch(),
-        logoutWatch()
+        logoutWatch(),
+        loaderWatch()
     ])
 }

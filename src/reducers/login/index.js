@@ -1,7 +1,7 @@
 import {
     SUBMIT_FORM_ERR,
     SUBMIT_FORM
-} from '../../CONSTS/CONSTS'
+} from '../../consts/CONSTS'
 
 const initialState = {
     user: '',
@@ -18,7 +18,7 @@ export default function login(state = initialState, action) {
                 password: action.body.password
             })
 
-        case SUBMIT_FORM:
+        case SUBMIT_FORM.SUCCESS:
             return Object.assign({}, state, {
                 items: action.payload.items,
                 logged: action.payload.logged,

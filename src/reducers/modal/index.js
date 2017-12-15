@@ -1,7 +1,7 @@
 import {
     SHOW_MODAL,
     CONFIRM_MODAL
-} from '../../CONSTS/CONSTS'
+} from '../../consts/CONSTS'
 
 const initialState = {
     deleteManyItems: false,
